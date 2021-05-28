@@ -34,7 +34,7 @@
                         <div class="item-content">
                             <h6 class="font-weight-normal">Solicitudes</h6>
                             <p class="font-weight-light small-text mb-0 text-muted">
-                                28
+                                0
                             </p>
                         </div>
                     </a>
@@ -47,7 +47,7 @@
                         <div class="item-content">
                             <h6 class="font-weight-normal">Compras</h6>
                             <p class="font-weight-light small-text mb-0 text-muted">
-                                23
+                                0
                             </p>
                         </div>
                     </a>
@@ -60,7 +60,7 @@
                         <div class="item-content">
                             <h6 class="font-weight-normal">Nuevos Usuarios Registrados</h6>
                             <p class="font-weight-light small-text mb-0 text-muted">
-                                2
+                                0
                             </p>
                         </div>
                     </a>

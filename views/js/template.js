@@ -81,6 +81,7 @@
 })(jQuery);
 $(function () {
   var url = window.location.pathname;
+
   var ruta = url.split("/");
 
   switch (ruta[2]) {

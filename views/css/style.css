@@ -22282,7 +22282,6 @@ dl li {
 }
 
 .main {
-
   margin: 0px auto;
   width: auto;
   max-width: 460px;
@@ -22308,4 +22307,25 @@ dl li {
     fill: transparent;
     stroke-dashoffset: -200;
   }
+}
+/*ESTILOS MODAL*/
+.modal-title {
+  color: #787878;
+  text-align: left;
+}
+.modal-header {
+  background: #dddce1;
+  color: white;
+}
+/**ESTILOS MAPA**/
+
+#map {
+  width: 64%;
+  height: 480px;
+  box-shadow: 5px 5px 5px #888;
+}
+
+#right-panel {
+  width: 100%;
+  height: 50%;
 }

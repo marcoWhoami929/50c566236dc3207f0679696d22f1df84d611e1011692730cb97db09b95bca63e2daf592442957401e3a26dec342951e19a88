@@ -38,7 +38,7 @@
                         </div>
                         <?php
 
-                        $login = new ControllerFunctions();
+                        $login = new ControllerTemplate();
                         $login->ctrAccesoUser();
 
                         ?>

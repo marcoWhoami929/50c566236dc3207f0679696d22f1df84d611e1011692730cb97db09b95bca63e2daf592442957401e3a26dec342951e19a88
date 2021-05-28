@@ -40,11 +40,11 @@ if ($action == 'solicitudes') {
                         <th style="border:none">Cliente</th>
                         <th style="border:none">Hora</th>
                         <th style="border:none">Forma Pago</th>
-                        <th style="border:none"></th>
-                        <th style="border:none"></th>
-                        <th style="border:none"></th>
-                        <th style="border:none"></th>
-                        <th style="border:none"></th>
+                        <th style="border:none">Visto</th>
+                        <th style="border:none">En camino</th>
+                        <th style="border:none">En Proceso</th>
+                        <th style="border:none">En entrega</th>
+                        <th style="border:none">Concluido</th>
                         <th style="border:none">Pdf</th>
                         <th style="border:none">Facturar</th>
                         <th style="border:none">Obs Recoleccion</th>
@@ -58,7 +58,7 @@ if ($action == 'solicitudes') {
                     <?php
                     $finales = 0;
                     foreach ($datos as $key => $row) {
-
+                        $sucursal = $row["sucursal"];
                         if ($row["tiempoProceso"] == "") {
                         } else {
                             $hora = $row["tiempoProceso"];
@@ -68,66 +68,58 @@ if ($action == 'solicitudes') {
 
                         if ($row["motoEnCamino"] != 0) {
 
-                            $motoEnCamino = "<button type='button' class='btn btn-success btn-rounded btn-icon btnHabilitar3' idStado3='" . $row["id"] . "' estado3='0' disabled>
+                            $motoEnCamino = "<button type='button' class='btn btn-success btn-rounded btn-icon btnHabilitar3' disabled>
                             <i class='ti-truck'></i>
-                        </button></td>";
+                        </button>";
                         } else {
 
-                            $motoEnCamino = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar3' idStado3='" . $row["id"] . "' estado3='1'>
+                            $motoEnCamino = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar3' onclick='recoleccionEnCamino(" . $row["id"] . ",1)'>
                             <i class='ti-truck'></i>
-                        </button></td>";
+                        </button>";
                         }
 
 
                         if ($row["enProceso"] != 0) {
 
-                            $enProceso = "<button type='button' class='btn btn-success btn-rounded btn-icon btnHabilitar5' idStado5='" . $row["id"] . "' estado5='0' disabled>
+                            $enProceso = "<button type='button' class='btn btn-success btn-rounded btn-icon btnHabilitar5' disabled>
                             <i class='ti-paint-bucket'></i>
-                        </button></td>";
+                        </button>";
                         } else {
 
-                            $enProceso = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar5' idStado5='" . $row["id"] . "' estado5='1'>
+                            $enProceso = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar5' onclick='enProceso(" . $row["id"] . ",1)'>
                             <i class='ti-paint-bucket'></i>
-                        </button></td>";
+                        </button>";
                         }
 
 
                         if ($row["motoEnCaminoRegreso"] != 0) {
 
-                            $motoEnCaminoRegreso = "<button type='button' class='btn btn-success btn-rounded btn-icon btnHabilitar7' idStado7='" . $row["id"] . "' estado7='0' disabled>
+                            $motoEnCaminoRegreso = "<button type='button' class='btn btn-success btn-rounded btn-icon btnHabilitar7'  disabled>
                             <i class='ti-map-alt'></i>
-                        </button></td>";
+                        </button>";
                         } else {
 
-                            $motoEnCaminoRegreso = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar7' idStado7='" . $row["id"] . "' estado7='1'>
+                            $motoEnCaminoRegreso = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar7' onclick='entregaEnCamino(" . $row["id"] . ",1)'>
                             <i class='ti-map-alt'></i>
-                        </button></td>";
+                        </button>";
                         }
 
                         if ($row["concluido"] != 0) {
 
-                            if ($row["motoEnCamino"] == 1 and $row["enProceso"] == 1 and  $row["motoEnCaminoRegreso"] == 1 and $row["concluido"] == 0) {
-
-                                $concluido = "<button type='button' class='btn btn-success btn-rounded btn-icon btnHabilitar8' idStado8='" . $row["id"] . "' estado8='0'>
+                            $concluido = "<button type='button' class='btn btn-success btn-rounded btn-icon btnHabilitar8' disabled>
                             <i class='ti-time'></i>
-                        </button></td>";
-                            } else {
-
-                                $concluido = "<button type='button' class='btn btn-success btn-rounded btn-icon btnHabilitar8' idStado8='" . $row["id"] . "' estado8='0' disabled>
-                                <i class='ti-time'></i>
-                            </button></td>";
-                            }
+                        </button>";
                         } else {
                             if ($row["motoEnCamino"] == 1 and $row["enProceso"] == 1 and  $row["motoEnCaminoRegreso"] == 1 and $row["concluido"] == 0) {
 
-                                $concluido = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar8' idStado8='" . $row["id"] . "' estado8='1'>
+                                $concluido = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar8' onclick='concluido(" . $row["id"] . ",1)' >
                                 <i class='ti-time'></i>
-                            </button></td>";
+                            </button>";
                             } else {
 
-                                $concluido = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar8' idStado8='" . $row["id"] . "' estado8='1' disabled>>
+                                $concluido = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar8'  disabled>
                                 <i class='ti-time'></i>
-                            </button></td>";
+                            </button>";
                             }
                         }
 
@@ -164,21 +156,21 @@ if ($action == 'solicitudes') {
                             $pdf  = "";
                         } else {
 
-                            $pdf = "<button type='button' class='btn btn-inverse-danger btn-icon btnDescargarSolicitud' idSolicitud='" . $row["id"] . "'>
+                            $pdf = "<button type='button' class='btn btn-inverse-danger btn-icon btnDescargarSolicitud'  idSolicitud='" . $row["id"] . "'>
                             <i class='ti-clipboard'></i>
                         </button>";
                         }
                         /******VALIDAR SI LA SOLICITUD HA SIDO VISTA POR EL AGENTE DE VENTA ****/
                         if ($row["visto"] != 0) {
 
-                            $visto = "<button type='button' class='btn btn-success btn-rounded btn-icon btnVisto' idVisto='" . $row["id"] . "' visto='0' disabled sucursal='" . $row["sucursal"] . "'>
+                            $visto = "<button type='button' class='btn btn-success btn-rounded btn-icon btnVisto' disabled>
                             <i class='ti-eye'></i>
-                        </button></td>";
+                        </button>";
                         } else {
 
-                            $visto = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnVisto' idVisto='" . $row["id"] . "' visto='1' sucursal='" . $row["sucursal"] . "'>
+                            $visto = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnVisto' onclick='solicitudVista(" . $row['id'] . ",1," . '"' . $sucursal . '"' . ")' >
                             <i class='ti-eye'></i>
-                        </button></td>";
+                        </button>";
                         }
                         /***********VALIDAR SI EL CLIENTE HA RECIBIDO UN REGALO POR SUS CANTIDAD DE SOLICITUDES******/
                         if ($row["ganadorRifa"] == 0) {
@@ -205,7 +197,7 @@ if ($action == 'solicitudes') {
 
                             $requiereFactura = "";
                         }
-                        $datos = "<button type='button' class='btn btn-inverse-info btn-icon btnVerDatos' idDatosCliente='" . $row["idCliente"] . "' nameSucursal='" . $row["sucursal"] . "' data-toggle='modal' data-target='#modalVerDatos'>
+                        $datos = "<button type='button' class='btn btn-inverse-info btn-icon btnVerDatos' onclick='verDatosCliente(" . $row["idCliente"] . ", " . '"' . $sucursal . '"' . ")'  data-toggle='modal' data-target='#modalVerDatos'>
                         <i class='ti-info'></i>
                     </button";
 

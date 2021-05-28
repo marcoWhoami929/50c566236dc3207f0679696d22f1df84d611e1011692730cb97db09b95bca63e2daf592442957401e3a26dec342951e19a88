@@ -42,6 +42,7 @@ session_start();
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 
 
+
 </head>
 
 <body>
@@ -72,7 +73,7 @@ session_start();
     echo '</div>';
     ?>
     <!-- JS PERSONALIZADO -->
-
+    <script src="views/js/solicitudes.js"></script>
 </body>
 
 </html>
