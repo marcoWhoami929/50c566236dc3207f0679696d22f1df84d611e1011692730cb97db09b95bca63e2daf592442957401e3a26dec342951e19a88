@@ -195,3 +195,26 @@ function computeTotalDistance(result) {
   total = total / 1000;
   document.getElementById("total").innerHTML = total + " km";
 }
+function descargarSolicitud(idSolicitud) {
+  var opcion = 1;
+  var datos = new FormData();
+  datos.append("folioSolicitud", idSolicitud);
+
+  $.ajax({
+    url: "ajax/solicitudes.ajax.php",
+    method: "POST",
+    data: datos,
+    cache: false,
+    contentType: false,
+    processData: false,
+    success: function (respuesta) {
+      window.location =
+        "index.php?ruta=solicitud&idSolicitud=" +
+        idSolicitud +
+        "&folio=" +
+        idSolicitud +
+        "&opcion=" +
+        opcion;
+    },
+  });
+}

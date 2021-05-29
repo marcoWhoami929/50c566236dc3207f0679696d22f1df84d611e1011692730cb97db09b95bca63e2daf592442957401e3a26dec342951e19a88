@@ -83,7 +83,6 @@ $(function () {
   var url = window.location.pathname;
 
   var ruta = url.split("/");
-
   switch (ruta[2]) {
     case "dashboard":
       cargarProductosSolicitados();
@@ -93,7 +92,7 @@ $(function () {
       cargarProductosSolicitados();
       cargarClientesRegistrados();
       break;
-    case "solicitudes":
+    case "solicitud":
       cargarSolicitudes(1);
       break;
   }

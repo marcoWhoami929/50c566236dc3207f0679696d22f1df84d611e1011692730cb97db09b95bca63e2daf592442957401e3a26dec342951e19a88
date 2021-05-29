@@ -156,7 +156,7 @@ if ($action == 'solicitudes') {
                             $pdf  = "";
                         } else {
 
-                            $pdf = "<button type='button' class='btn btn-inverse-danger btn-icon btnDescargarSolicitud'  idSolicitud='" . $row["id"] . "'>
+                            $pdf = "<button type='button' class='btn btn-inverse-danger btn-icon btnDescargarSolicitud' onclick='descargarSolicitud(" . $row["id"] . ")'>
                             <i class='ti-clipboard'></i>
                         </button>";
                         }

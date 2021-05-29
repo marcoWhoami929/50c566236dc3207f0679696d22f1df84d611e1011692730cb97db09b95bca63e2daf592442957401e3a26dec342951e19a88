@@ -250,3 +250,35 @@ MODAL MOSTRAR DATOS DEL CLIENTE
     </div>
 </div>
 <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7Ow27ztKwFY0_CyX5FXXfK6PV87gJsPQ"></script>
+<script type="text/javascript">
+    function getQueryVariable(variable) {
+        //Estoy asumiendo que query es window.location.search.substring(1);
+        var urlSolicitud = location.search;
+        var query = urlSolicitud;
+        var vars = query.split("&");
+        for (var i = 0; i < vars.length; i++) {
+            var pair = vars[i].split("=");
+            if (pair[0] == variable) {
+                return pair[1];
+            }
+        }
+        return false;
+    }
+
+    var URLactual = window.location;
+
+    if (URLactual == "http://localhost/DEKKERADMIN/solicitud") {
+
+    } else {
+        var folio = getQueryVariable("folio");
+        var opcion = getQueryVariable("opcion");
+        if (folio == "false" && opcion == "false") {} else {
+            window.location.href =
+                "views/moduls/pdf.php/?folio=" + folio + "&opcion=" + opcion;
+            setTimeout(function() {
+                window.location.href = "solicitud";
+
+            }, 1000);
+        }
+    }
+</script>

@@ -108,7 +108,7 @@ class ModelFunctions extends database
     public function mdlAgregarRutaSolicitud($tabla, $item, $valor)
     {
 
-        $stmt = $this->mysqli->prepare("UPDATE $tabla SET rutaSolicitud = 'solicitudes/$valor.pdf' WHERE $item = :$item");
+        $stmt = $this->mysqli->prepare("UPDATE $tabla SET rutaSolicitud = 'solicitudes/SOLICITUD-$valor.pdf' WHERE $item = :$item");
 
         $stmt->bindParam(":" . $item, $valor, PDO::PARAM_INT);
 

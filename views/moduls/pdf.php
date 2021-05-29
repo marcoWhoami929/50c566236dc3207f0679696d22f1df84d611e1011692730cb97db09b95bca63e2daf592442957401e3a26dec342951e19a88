@@ -265,7 +265,7 @@
         <thead>
             <tr>
                 <th>
-                    <img class="logo" src="../img/plantilla/logo.png" />
+                    <img class="logo" src="../images/logo.png" />
                 </th>
                 <th>
                     <b class="rfc">PCP970822467</b> <b class="nroPedido">Serie:<b class="numFolio">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SOLM</b></b>
@@ -391,7 +391,7 @@
 
         <tbody style="color: #000000;font-family: Helvetica, Sans-Serif;font-weight: lighter;font-size: 10px;text-transform: uppercase;">
             <?php
-            require_once __DIR__ . '../../../vistas/modulos/conversor.php';
+            require_once __DIR__ . '../../../views/moduls/conversor.php';
 
 
             if (isset($_GET["folio"])) {
@@ -763,34 +763,23 @@ if ($opcion == 1) {
     $rutaGuardado = '../../solicitudes/';
     $dompdf = new Dompdf();
     $dompdf->load_html(ob_get_clean());
-    $filename = "" . $folio . "" . ".pdf";
+    $filename = "SOLICITUD-" . $folio . "" . ".pdf";
     //Renderiza el archivo primero
     $dompdf->render();
     //Guardalo en una variable
     $pdf = $dompdf->output();
     file_put_contents($rutaGuardado . $filename, $pdf);
-
-
-    $dompdf->render();
-    $pdf = $dompdf->output();
-    $filename = "SOLICITUD-'" . $folio . "'";
     file_put_contents($filename, $pdf);
     $dompdf->stream($filename);
     unlink($filename);
 } else if ($opcion == 2) {
-    /*
-             //Donde guardar el documento
-            $rutaGuardado = '../../solicitudes/';
-            $dompdf = new Dompdf();
-            $dompdf->load_html(ob_get_clean());
-            $filename = "".$folio."".".pdf";
-            //Renderiza el archivo primero
-            $dompdf->render();
-            //Guardalo en una variable
-            $pdf = $dompdf->output();
-            file_put_contents( $rutaGuardado.$filename, $pdf);
-            header("Location: ../../../controlMuestras");
-            */
+    $dompdf = new Dompdf();
+    $dompdf->load_html(ob_get_clean());
+    $dompdf->render();
+    $pdf = $dompdf->output();
+    $filename = "SOLICITUD-'" . $folio . "'";
+    //file_put_contents($filename, $pdf);
+    $dompdf->stream($filename, array('Attachment' => 0));
 }
 
 ?>

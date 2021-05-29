@@ -9,7 +9,7 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="solicitudes">
+                <a class="nav-link" href="solicitud">
                     <i class="ti-pin menu-icon"></i>
                     <span class="menu-title">Solicitudes</span>
                 </a>

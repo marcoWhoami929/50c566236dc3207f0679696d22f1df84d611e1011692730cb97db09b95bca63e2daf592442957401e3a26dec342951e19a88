@@ -1,6 +1,6 @@
 <?php
 
-require_once "../models/functionsModel.php";
+require_once  __DIR__ . "../../models/functionsModel.php";
 class ControllerFunctions
 {
 
