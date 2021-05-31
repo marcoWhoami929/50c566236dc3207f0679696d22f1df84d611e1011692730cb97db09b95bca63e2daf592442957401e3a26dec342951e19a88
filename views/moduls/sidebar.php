@@ -20,12 +20,14 @@
                     <span class="menu-title">Compra De Productos</span>
                 </a>
             </li>
+            <!--
             <li class="nav-item">
                 <a class="nav-link" href="promociones">
                     <i class="ti-announcement menu-icon"></i>
                     <span class="menu-title">Promociones</span>
                 </a>
             </li>
+        -->
             <li class="nav-item">
                 <a class="nav-link" href="ganadores">
                     <i class="ti-cup menu-icon"></i>

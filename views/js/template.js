@@ -95,6 +95,9 @@ $(function () {
     case "solicitud":
       cargarSolicitudes(1);
       break;
+    case "compras":
+      cargarCompras(1);
+      break;
   }
 });
 /*FUNCIONES TABLAS */
@@ -183,6 +186,8 @@ function cargarClientesRegistrados() {
 function cargarSolicitudes(page) {
   var query = $("#nombre").val();
   var estatus = $("#estatus").val();
+  var estado = $("#estado").val();
+  var tipo = $("#tipo").val();
   var sucursal = $("#sucursal").val();
   var per_page = $("#per_page").val();
   var parametros = {
@@ -191,6 +196,8 @@ function cargarSolicitudes(page) {
     query: query,
     sucursal: sucursal,
     estatus: estatus,
+    estado: estado,
+    tipo: tipo,
     per_page: per_page,
   };
   $("#loader").fadeIn("slow");
@@ -202,6 +209,34 @@ function cargarSolicitudes(page) {
     },
     success: function (data) {
       $(".datosSolicitudes").html(data).fadeIn("slow");
+      $("#loader").html("");
+    },
+  });
+}
+function cargarCompras(page) {
+  var query = $("#nombre").val();
+  var estatus = $("#estatus").val();
+  var estado = $("#estado").val();
+  var sucursal = $("#sucursal").val();
+  var per_page = $("#per_page").val();
+  var parametros = {
+    action: "compras",
+    page: page,
+    query: query,
+    sucursal: sucursal,
+    estatus: estatus,
+    estado: estado,
+    per_page: per_page,
+  };
+  $("#loader").fadeIn("slow");
+  $.ajax({
+    url: "ajax/functions.php",
+    data: parametros,
+    beforeSend: function (objeto) {
+      $("#loader").html("Cargando...");
+    },
+    success: function (data) {
+      $(".datosCompras").html(data).fadeIn("slow");
       $("#loader").html("");
     },
   });

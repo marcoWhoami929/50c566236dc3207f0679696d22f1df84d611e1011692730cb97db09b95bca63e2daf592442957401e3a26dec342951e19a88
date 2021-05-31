@@ -218,3 +218,127 @@ function descargarSolicitud(idSolicitud) {
     },
   });
 }
+function verDatosFacturacion(idCliente){
+  var datos = new FormData();
+  datos.append("idClienteFacturacion", idCliente);
+
+  $.ajax({
+
+    url:"ajax/solicitudesAcciones.php",
+    method: "POST",
+    data: datos,
+    cache: false,
+    contentType: false,
+    processData: false,
+    dataType: "json",
+    success: function(respuesta){ 
+ 
+      $("#rfc").val(respuesta["rfc"]);
+      $("#razonSocial").val(respuesta["razonSocial"]);
+      $("#direccionFiscal").val(respuesta["direccionFiscal"]);
+      $("#codigoPostal").val(respuesta["codigoPostal"]);
+      $("#correo").val(respuesta["correo"]);
+      $("#usoCfdi").val(respuesta["codigo"]+" - "+respuesta["descripcion"]);
+
+    }
+
+  })
+
+}
+function verObservaciones(idSolicitud,tipo){
+
+  var datos = new FormData();
+  datos.append("idSolicitud", idSolicitud);
+
+  $.ajax({
+
+    url:"ajax/solicitudesAcciones.php",
+    method: "POST",
+    data: datos,
+    cache: false,
+    contentType: false,
+    processData: false,
+    dataType: "json",
+    success: function(respuesta){ 
+      if (tipo == 1) {
+         $("#observaciones").val(respuesta["observaciones"]);
+      }else{
+         $("#observaciones").val(respuesta["observacionesProductos"]);
+      }
+     
+    
+
+    }
+
+  })
+
+}
+function verDetalleCompra(idSolicitud){
+
+  var datos = new FormData();
+  datos.append("idSolicitudCompra", idSolicitud);
+
+  $.ajax({
+
+    url:"ajax/solicitudesAcciones.php",
+    method: "POST",
+    data: datos,
+    cache: false,
+    contentType: false,
+    processData: false,
+    dataType: "json",
+    success: function(respuesta){ 
+           
+            var  productos = JSON.parse(respuesta[0]);
+            
+            
+            body = document.getElementById("tablaDetalleCompras");
+
+
+            tblBody = document.createElement("tbody");
+
+            var arregloNombres = ['codigoProducto','descripcion','precioProducto','unidadMedida'];
+
+            // Crea las celdas
+            for (var i = 0; i < productos.length; i++) {
+              // Crea las hileras de la tabla
+              var hilera = document.createElement("tr");
+           
+              for (var j = 0; j < arregloNombres.length; j++) {
+               
+
+                var celda = document.createElement("td");
+                if (arregloNombres[j] == "precioProducto") {
+                  var unidad = '$ '+productos[i][arregloNombres[j]]+'';
+                  var textoCelda = document.createTextNode(unidad);
+                }else{
+                  var textoCelda = document.createTextNode(productos[i][arregloNombres[j]]);
+                }
+                
+                celda.appendChild(textoCelda);
+                hilera.appendChild(celda);
+               
+              }
+           
+              // agrega la hilera al final de la tabla (al final del elemento tblbody)
+              tblBody.appendChild(hilera);
+            }
+           
+            // appends <table> into <body>
+            body.appendChild(tblBody);
+            
+      /*
+  
+      */
+
+    }
+
+  })
+
+}
+function eliminarProductos(){
+      var nodos = document.getElementById('tablaDetalleCompras');
+        while (nodos.firstChild) {
+          nodos.removeChild(nodos.firstChild);
+        }
+}

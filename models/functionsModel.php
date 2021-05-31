@@ -1386,4 +1386,43 @@ class ModelFunctions extends database
 
         $stmt = null;
     }
+    /*=============================================
+    MOSTRAR OBSERVACIONES
+    =============================================*/
+
+    public function mdlMostrarObservaciones($tabla, $item, $valor)
+    {
+
+        $stmt = $this->mysqli->prepare("SELECT observaciones,observacionesProductos FROM $tabla WHERE $item = :$item");
+
+        $stmt->bindParam(":" . $item, $valor, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetch();
+
+        $stmt->close();
+
+        $stmt = null;
+    }
+    /*=============================================
+    VER DETALLE COMPRA
+    =============================================*/
+
+    public function mdlMostrarDetalleCompra($tabla, $item, $valor)
+    {
+
+        $stmt = $this->mysqli->prepare("SELECT listaProductos FROM $tabla WHERE $item = :$item");
+
+        $stmt->bindParam(":" . $item, $valor, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetch();
+
+        $stmt->close();
+
+        $stmt = null;
+    }
+
 }

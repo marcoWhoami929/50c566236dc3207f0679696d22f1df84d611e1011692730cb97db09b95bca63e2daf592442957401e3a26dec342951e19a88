@@ -45,13 +45,37 @@ if (isset($_POST['solicitudProceso'])) {
     $formaPago = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST["formaPago"])));
     $lista = $_POST["listaProductos"];
 
+     $ultimoId = mysqli_query($conn, "Select if(ISNULL(max(id)),1,max(id)) as total from solicitudes");
+    while ($dato = mysqli_fetch_array($ultimoId)) {
+        $ultimoIdentificador = $dato["total"];
+
+       
+    }
+
     if ($lista == "[]") {
 
         $listaProductos = "[{}]";
+        $tipoSolicitud = 1;
+
     } else {
 
         $listaProductos = $_POST["listaProductos"];
+        $tipoSolicitud = 2;
+        $listaProducto = explode(',',$lista);
+
+        $listas = json_decode($lista,true);
+        foreach ($listas as $value) {
+            $idProducto = $value['idProducto'];
+            $idCliente = $value['idCliente'];
+            $precioProducto = $value['precioProducto'];
+
+            $insertar = mysqli_query($conn, "insert into `productossolicitudes` (`idSolicitud`,`idProducto`,`idCliente`,`precioVenta`) values ('$ultimoIdentificador','$idProducto','$idCliente','$precioProducto')");
+          
+        }
+
     }
+
+    
 
     $solicitudEnviada = 1;
     $rutaSolicitud = "";
@@ -59,15 +83,16 @@ if (isset($_POST['solicitudProceso'])) {
     $obtenerLista = mysqli_query($conn, "Select * from solicitudes where `idCliente`='$idCliente'");
 
 
+
     if (mysqli_num_rows($obtenerLista) == 4) {
 
-        $q = mysqli_query($conn, "insert into `solicitudes` (`cliente`,`idCliente`,`sucursal`,`observaciones`,`solicitudEnviada`,`listaProductos`,`observacionesProductos`,`rutaSolicitud`,`formaPago`) values ('$nombreCliente','$idCliente','$sucursalElegida','$observacionesSolicitud','$solicitudEnviada','$listaProductos','$observacionesProductos','$rutaSolicitud','$formaPago')");
+        $q = mysqli_query($conn, "insert into `solicitudes` (`id`,`tipoSolicitud`,`estatus`,`cliente`,`idCliente`,`sucursal`,`observaciones`,`solicitudEnviada`,`listaProductos`,`observacionesProductos`,`rutaSolicitud`,`formaPago`) values ('$ultimoIdentificador','$tipoSolicitud','1','$nombreCliente','$idCliente','$sucursalElegida','$observacionesSolicitud','$solicitudEnviada','$listaProductos','$observacionesProductos','$rutaSolicitud','$formaPago')");
         mysqli_query($conn, "update `solicitudes` set `ganadorRifa`='1' where `idCliente`='$idCliente'");
 
         echo "ganador";
     } else if (mysqli_num_rows($obtenerLista) < 4) {
 
-        $q = mysqli_query($conn, "insert into `solicitudes` (`cliente`,`idCliente`,`sucursal`,`observaciones`,`solicitudEnviada`,`listaProductos`,`observacionesProductos`,`rutaSolicitud`,`formaPago`) values ('$nombreCliente','$idCliente','$sucursalElegida','$observacionesSolicitud','$solicitudEnviada','$listaProductos','$observacionesProductos','$rutaSolicitud','$formaPago')");
+        $q = mysqli_query($conn, "insert into `solicitudes` (`id`,`tipoSolicitud`,`estatus`,`cliente`,`idCliente`,`sucursal`,`observaciones`,`solicitudEnviada`,`listaProductos`,`observacionesProductos`,`rutaSolicitud`,`formaPago`) values ('$ultimoIdentificador','$tipoSolicitud','1','$nombreCliente','$idCliente','$sucursalElegida','$observacionesSolicitud','$solicitudEnviada','$listaProductos','$observacionesProductos','$rutaSolicitud','$formaPago')");
 
 
 
@@ -79,7 +104,7 @@ if (isset($_POST['solicitudProceso'])) {
         }
     } else if (mysqli_num_rows($obtenerLista) >= 5) {
 
-        $q = mysqli_query($conn, "insert into `solicitudes` (`cliente`,`idCliente`,`sucursal`,`observaciones`,`solicitudEnviada`,`listaProductos`,`observacionesProductos`,`rutaSolicitud`,`formaPago`) values ('$nombreCliente','$idCliente','$sucursalElegida','$observacionesSolicitud','$solicitudEnviada','$listaProductos','$observacionesProductos','$rutaSolicitud','$formaPago')");
+        $q = mysqli_query($conn, "insert into `solicitudes` (`id`,`tipoSolicitud`,`estatus`,`cliente`,`idCliente`,`sucursal`,`observaciones`,`solicitudEnviada`,`listaProductos`,`observacionesProductos`,`rutaSolicitud`,`formaPago`) values ('$ultimoIdentificador','$tipoSolicitud','1','$nombreCliente','$idCliente','$sucursalElegida','$observacionesSolicitud','$solicitudEnviada','$listaProductos','$observacionesProductos','$rutaSolicitud','$formaPago')");
 
 
 

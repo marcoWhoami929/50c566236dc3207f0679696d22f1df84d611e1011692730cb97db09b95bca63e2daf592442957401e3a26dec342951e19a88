@@ -51,6 +51,29 @@ class SolicitudesAcciones
 
         echo json_encode($respuesta);
     }
+
+    public $idSolicitud;
+    public function ajaxVerObservacionesSolicitud()
+    {
+
+        $item = "id";
+        $valor = $this->idSolicitud;
+
+        $respuesta = $this->controller->ctrMostrarObservaciones($item, $valor);
+
+        echo json_encode($respuesta);
+    }
+    public $idSolicitudCompra;
+    public function ajaxVerDetalleCompra()
+    {
+
+        $item = "id";
+        $valor = $this->idSolicitudCompra;
+
+        $respuesta = $this->controller->ctrMostrarDetalleCompra($item, $valor);
+        
+        echo json_encode($respuesta);
+    }
 }
 /*=============================================
 VER DATOS CLIENTE
@@ -71,11 +94,29 @@ if (isset($_POST["idClienteFacturacion"])) {
     $verDatosFacturacion->ajaxVerDatosFacturacion();
 }
 /*=============================================
-
+VER DATOS SUCURSAL
 =============================================*/
 if (isset($_POST["nameSucursal"])) {
 
     $verDatosCliente = new SolicitudesAcciones();
     $verDatosCliente->nameSucursal = $_POST["nameSucursal"];
     $verDatosCliente->ajaxVerSucursal();
+}
+/*==============================================
+VER OBSERVACIONES
+==============================================*/
+if (isset($_POST["idSolicitud"])) {
+
+    $verObservaciones = new SolicitudesAcciones();
+    $verObservaciones->idSolicitud = $_POST["idSolicitud"];
+    $verObservaciones->ajaxVerObservacionesSolicitud();
+}
+/*==============================================
+VER DETALLE COMPRA
+==============================================*/
+if (isset($_POST["idSolicitudCompra"])) {
+
+    $verDetalleCompra = new SolicitudesAcciones();
+    $verDetalleCompra->idSolicitudCompra = $_POST["idSolicitudCompra"];
+    $verDetalleCompra->ajaxVerDetalleCompra();
 }

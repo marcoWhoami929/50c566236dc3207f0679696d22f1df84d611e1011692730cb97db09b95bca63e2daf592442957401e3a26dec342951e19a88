@@ -1333,4 +1333,30 @@ class ControllerFunctions
 
         return $respuesta;
     }
+    /*=============================================
+    MOSTRAR OBSERVACIONES
+    =============================================*/
+
+    public function ctrMostrarObservaciones($item, $valor)
+    {
+
+        $tabla = "solicitudes";
+
+        $respuesta = $this->modelo->mdlMostrarObservaciones($tabla, $item, $valor);
+
+        return $respuesta;
+    }
+    /*=============================================
+    VER DETALLE COMPRA
+    =============================================*/
+
+    public function ctrMostrarDetalleCompra($item, $valor)
+    {
+
+        $tabla = "solicitudes";
+
+        $respuesta = $this->modelo->mdlMostrarDetalleCompra($tabla, $item, $valor);
+
+        return $respuesta;
+    }
 }

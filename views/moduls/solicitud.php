@@ -25,7 +25,7 @@
                             </div>
 
                             <div class="col-lg-2 col-md-2  col-sm-2">
-                                <label class="">Estatus</label>
+                                <label class="">Proceso</label>
                                 <select class="form-control" id="estatus" onchange="cargarSolicitudes(1);">
                                     <option value="">Todos</option>
                                     <option value="1">Sin ver</option>
@@ -37,7 +37,22 @@
                                 </select>
                             </div>
 
-
+                            <div class="col-lg-2 col-md-2  col-sm-2">
+                                <label class="">Estatus</label>
+                                <select class="form-control" id="estado" onchange="cargarSolicitudes(1);">
+                                    <option value="">Todos</option>
+                                    <option value="1">Vigente</option>
+                                    <option value="0">Cancelado</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-2 col-md-2  col-sm-2">
+                                <label class="">Tipo</label>
+                                <select class="form-control" id="tipo" onchange="cargarSolicitudes(1);">
+                                    <option value="">Todos</option>
+                                    <option value="1">Recolección</option>
+                                    <option value="2">Compra</option>
+                                </select>
+                            </div>
                             <div class="col-lg-2 col-md-2  col-sm-2">
                                 <label class="">Mostrar</label>
                                 <select class="form-control" id="per_page" onchange="cargarSolicitudes(1);">
@@ -63,7 +78,6 @@
                         </div>
                     </div>
 
-                    </p>
                     <div class="col-md-12 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
@@ -187,63 +201,108 @@ MODAL MOSTRAR DATOS DEL CLIENTE
     </div>
 </div>
 <!-- Modal Ver Datos Facturacion-->
+
 <div class="modal fade" id="modalVerDatosFacturacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document" style="width: 50%">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
-            <div class="modal-header" style="background:#2667ce; color:white">
-                <button type="button" class="close" id="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+            <div class="modal-header">
+
+                <button type="button" class="btn btn-success btn-rounded btn-icon" data-dismiss="modal" aria-label="Close">
+                    <i class="ti-close"></i>
                 </button>
-                <h5 class="modal-title" id="exampleModalLabel">DATOS DEL FACTURACIÓN</h5>
+                <h5 class="modal-title">DATOS DE FACTURACIÓN</h5>
 
             </div>
             <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Datos cliente</h4>
+                                <p class="card-description" id="nombreCliente">
 
-                <div class="input-group">
-                    <span class="input-group-addon" style="font-weight: bold; border:none;color: #2667ce">RFC:</span>
+                                </p>
+                                <form class="forms-sample">
 
-                    <input type="text" class="form-control input-lg" id="rfc" name="rfc" readonly style="border:none; background: white;font-size:11px">
+                                    <div class="form-group">
+                                        <label>RFC</label>
+                                        <input type="text" class="form-control" id="rfc" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Razón Social:</label>
+                                        <input type="text" class="form-control" id="razonSocial" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Dirección Fiscal:</label>
+                                        <textarea class="form-control" id="direccionFiscal" rows="4"></textarea>
+                                    </div>
+                                     <div class="form-group">
+                                        <label>Código Postal:</label>
+                                        <input type="text" class="form-control" id="codigoPostal" disabled>
+                                    </div>
+                                     <div class="form-group">
+                                        <label>Correo Electrónico:</label>
+                                        <input type="text" class="form-control" id="correo" disabled>
+                                    </div>
+                                      <div class="form-group">
+                                        <label>Uso Cfdi:</label>
+                                        <input type="text" class="form-control" id="usoCfdi" disabled>
+                                    </div>
+
+
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                  
                 </div>
+               
+            </div>
+            <div class="modal-footer">
 
-                <div class="input-group">
-                    <span class="input-group-addon" style="font-weight: bold; border:none;color: #2667ce">Razón Social:</span>
+                <button type="button" class="btn btn-info" id="salir" data-dismiss="modal">Salir</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="modalVerObservaciones" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
 
-                    <input type="text" class="form-control input-lg" id="razonSocial" name="razonSocial" readonly style="border: none;background: white;font-size:11px">
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-addon" style="font-weight: bold; border:none;color: #2667ce">Dirección Fiscal:</span>
-
-                    <input type="text" class="form-control input-lg" id="direccionFiscal" name="direccionFiscal" readonly style="border: none;background: white;font-size:11px">
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-addon" style="font-weight: bold; border:none;color: #2667ce">Código Postal:</span>
-
-                    <input type="text" class="form-control input-lg" id="codigoPostal" name="codigoPostal" readonly style="border: none;background: white;font-size:11px">
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-addon" style="font-weight: bold; border:none;color: #2667ce">Correo:</span>
-
-                    <input type="text" class="form-control input-lg" id="correo" name="correo" readonly style="border: none;background: white;font-size:11px">
-
-                </div>
-
-                <div class="input-group">
-                    <span class="input-group-addon" style="font-weight: bold; border:none;color: #2667ce">Uso Cfdi:</span>
-
-                    <input type="text" class="form-control input-lg" id="usoCfdi" name="usoCfdi" readonly style="border: none;background: white;font-size:11px">
-
-                </div>
-
-                <br>
-
+                <button type="button" class="btn btn-success btn-rounded btn-icon" data-dismiss="modal" aria-label="Close">
+                    <i class="ti-close"></i>
+                </button>
+                <h5 class="modal-title"></h5>
 
             </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Observaciones</h4>
+                                <p class="card-description" id="nombreCliente">
 
+                                </p>
+                                <form class="forms-sample">
 
+                                    <div class="form-group">
+                                       
+                                        <textarea class="form-control" id="observaciones" rows="4"></textarea>
+                                    </div>
+            
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                  
+                </div>
+               
+            </div>
             <div class="modal-footer">
+
                 <button type="button" class="btn btn-info" id="salir" data-dismiss="modal">Salir</button>
             </div>
         </div>
