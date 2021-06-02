@@ -80,6 +80,9 @@
   }
 })(jQuery);
 $(function () {
+  actualizaSolicitudes();
+  //setInterval("actualizaSolicitudes()", 6000);
+
   var url = window.location.pathname;
 
   var ruta = url.split("/");
@@ -98,11 +101,18 @@ $(function () {
     case "compras":
       cargarCompras(1);
       break;
+    case "ganadores":
+      cargarGanadores(1);
+      break;
   }
 });
+function actualizaSolicitudes() {
+  $(".notificacionesApp").load("views/moduls/notificaciones.php");
+}
 /*FUNCIONES TABLAS */
 function cargarProductosSolicitados() {
   $(".tableProductosSolicitados").DataTable({
+    ajax: "ajax/productosSolicitados.php",
     deferRender: true,
     retrieve: true,
     processing: true,
@@ -144,12 +154,13 @@ function cargarProductosSolicitados() {
 }
 function cargarClientesRegistrados() {
   $(".tableClientesRegistrados").DataTable({
+    ajax: "ajax/clientesRegistrados.php",
     deferRender: true,
     retrieve: true,
     processing: true,
     fixedHeader: true,
     iDisplayLength: 10,
-    order: [[0, "desc"]],
+    order: [[0, "asc"]],
     /*"scrollX": true,*/
     lengthMenu: [
       [10, 25, 50, 100, 150, 200, 300, -1],
@@ -237,6 +248,30 @@ function cargarCompras(page) {
     },
     success: function (data) {
       $(".datosCompras").html(data).fadeIn("slow");
+      $("#loader").html("");
+    },
+  });
+}
+function cargarGanadores(page) {
+  var query = $("#nombre").val();
+  var sucursal = $("#sucursal").val();
+  var per_page = $("#per_page").val();
+  var parametros = {
+    action: "ganadores",
+    page: page,
+    query: query,
+    sucursal: sucursal,
+    per_page: per_page,
+  };
+  $("#loader").fadeIn("slow");
+  $.ajax({
+    url: "ajax/functions.php",
+    data: parametros,
+    beforeSend: function (objeto) {
+      $("#loader").html("Cargando...");
+    },
+    success: function (data) {
+      $(".datosGanadores").html(data).fadeIn("slow");
       $("#loader").html("");
     },
   });

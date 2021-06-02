@@ -45,37 +45,40 @@ if (isset($_POST['solicitudProceso'])) {
     $formaPago = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST["formaPago"])));
     $lista = $_POST["listaProductos"];
 
-     $ultimoId = mysqli_query($conn, "Select if(ISNULL(max(id)),1,max(id)) as total from solicitudes");
+    $ultimoId = mysqli_query($conn, "Select if(ISNULL(max(id)),1,max(id)+1) as total from solicitudes");
     while ($dato = mysqli_fetch_array($ultimoId)) {
         $ultimoIdentificador = $dato["total"];
-
-       
     }
 
     if ($lista == "[]") {
 
         $listaProductos = "[{}]";
         $tipoSolicitud = 1;
-
+        $actualizarAcumulado = mysqli_query($conn, "UPDATE user SET `solicitudes` = (solicitudes+1) WHERE `id` = '$idCliente'");
     } else {
 
         $listaProductos = $_POST["listaProductos"];
         $tipoSolicitud = 2;
-        $listaProducto = explode(',',$lista);
+        $listaProducto = explode(',', $lista);
 
-        $listas = json_decode($lista,true);
+        $listas = json_decode($lista, true);
+        $compras = 0;
         foreach ($listas as $value) {
             $idProducto = $value['idProducto'];
             $idCliente = $value['idCliente'];
             $precioProducto = $value['precioProducto'];
+            $cantidad = $value['cantidad'];
+            $total = $value['precioProducto'] * $value['cantidad'];
+            $compras +=  $total;
 
-            $insertar = mysqli_query($conn, "insert into `productossolicitudes` (`idSolicitud`,`idProducto`,`idCliente`,`precioVenta`) values ('$ultimoIdentificador','$idProducto','$idCliente','$precioProducto')");
-          
+            $insertar = mysqli_query($conn, "insert into `productossolicitudes` (`idSolicitud`,`idProducto`,`idCliente`,`precioVenta`,`cantidad`,`total`) values ('$ultimoIdentificador','$idProducto','$idCliente','$precioProducto','$cantidad','$total')");
         }
+        $actualizarAcumulado = mysqli_query($conn, "UPDATE user SET `compras` = (compras+1) WHERE `id` = '$idCliente'");
 
+        $actualizarCliente = mysqli_query($conn, "UPDATE user SET `acumulado` = (acumulado + $compras) WHERE `id` = '$idCliente'");
     }
 
-    
+
 
     $solicitudEnviada = 1;
     $rutaSolicitud = "";
@@ -87,7 +90,9 @@ if (isset($_POST['solicitudProceso'])) {
     if (mysqli_num_rows($obtenerLista) == 4) {
 
         $q = mysqli_query($conn, "insert into `solicitudes` (`id`,`tipoSolicitud`,`estatus`,`cliente`,`idCliente`,`sucursal`,`observaciones`,`solicitudEnviada`,`listaProductos`,`observacionesProductos`,`rutaSolicitud`,`formaPago`) values ('$ultimoIdentificador','$tipoSolicitud','1','$nombreCliente','$idCliente','$sucursalElegida','$observacionesSolicitud','$solicitudEnviada','$listaProductos','$observacionesProductos','$rutaSolicitud','$formaPago')");
-        mysqli_query($conn, "update `solicitudes` set `ganadorRifa`='1' where `idCliente`='$idCliente'");
+        mysqli_query($conn, "update `solicitudes` set `ganadorRifa`='1' where `idCliente`='$idCliente' and `id` = '$ultimoIdentificador'");
+
+        $agregarGanador = mysqli_query($conn, "insert into `ganadores` (`idCliente`,`premio`,`idSolicitud`) values ('$idCliente','PLAYERA SW','$ultimoIdentificador')");
 
         echo "ganador";
     } else if (mysqli_num_rows($obtenerLista) < 4) {
@@ -149,6 +154,30 @@ if (isset($_POST['solicitudProceso'])) {
         }
     }
 
+    $titulo = "Hola";
+    $mensaje = "Un cliente ha realizado una nueva solicitud";
+
+    ////////ENVÍO DE NOTIFICACIÓN/////////
+    $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
+    $token = 'db1ZdQXxXIw:APA91bGuq33c-uddz8tK3HpvN54xroZvoH2vmawZ1pS2Ptj4whALkCSdpy_gTec-0wDuxz-f_IGeIPe6NTZuYE5yijT88-EbCCh3yb9cFr293xE6k1X2xeoITqPjboX0IeG313TGUQeZ';
+    $apiKey = 'AAAADfhsy0M:APA91bFveoivL5ETkrfu9ydjtuFyzTYvllqDpLqTl4iLIav8qsXIlFMYscHASU0FPpiBy_yNpLdRRthZj6TI8DOPXmVyzYn2qu48plV7R_PSpbnW44V-eLeezrLYRrXubd8NGs9vqcX2';
+    $notification = ['title' => $titulo, 'body' => $mensaje, 'icon' => 'myIcon', 'sound' => 'mySound'];
+    $extraNotificationData = ["message" => $notification, "moredata" => 'dd'];
+    $fcmNotification = [
+
+        'to' => $token,
+        'notification' => $notification, 'data' => $extraNotificationData
+    ];
+    $headers = ['Authorization: key=' . $apiKey, 'Content-Type: application/json'];
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $fcmUrl);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fcmNotification));
+    $result = curl_exec($ch);
+    curl_close($ch);
 
 
     echo mysqli_error($conn);

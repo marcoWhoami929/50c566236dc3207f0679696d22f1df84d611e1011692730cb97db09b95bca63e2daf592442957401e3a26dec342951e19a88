@@ -13,6 +13,7 @@ function solicitudVista(idVisto, visto, sucursal) {
     processData: false,
     success: function (respuesta) {
       cargarSolicitudes(1);
+      actualizaSolicitudes();
     },
   });
 }
@@ -218,127 +219,163 @@ function descargarSolicitud(idSolicitud) {
     },
   });
 }
-function verDatosFacturacion(idCliente){
+function verDatosFacturacion(idCliente) {
   var datos = new FormData();
   datos.append("idClienteFacturacion", idCliente);
 
   $.ajax({
-
-    url:"ajax/solicitudesAcciones.php",
+    url: "ajax/solicitudesAcciones.php",
     method: "POST",
     data: datos,
     cache: false,
     contentType: false,
     processData: false,
     dataType: "json",
-    success: function(respuesta){ 
- 
+    success: function (respuesta) {
       $("#rfc").val(respuesta["rfc"]);
       $("#razonSocial").val(respuesta["razonSocial"]);
       $("#direccionFiscal").val(respuesta["direccionFiscal"]);
       $("#codigoPostal").val(respuesta["codigoPostal"]);
       $("#correo").val(respuesta["correo"]);
-      $("#usoCfdi").val(respuesta["codigo"]+" - "+respuesta["descripcion"]);
-
-    }
-
-  })
-
+      $("#usoCfdi").val(respuesta["codigo"] + " - " + respuesta["descripcion"]);
+    },
+  });
 }
-function verObservaciones(idSolicitud,tipo){
-
+function verObservaciones(idSolicitud, tipo) {
   var datos = new FormData();
   datos.append("idSolicitud", idSolicitud);
 
   $.ajax({
-
-    url:"ajax/solicitudesAcciones.php",
+    url: "ajax/solicitudesAcciones.php",
     method: "POST",
     data: datos,
     cache: false,
     contentType: false,
     processData: false,
     dataType: "json",
-    success: function(respuesta){ 
+    success: function (respuesta) {
       if (tipo == 1) {
-         $("#observaciones").val(respuesta["observaciones"]);
-      }else{
-         $("#observaciones").val(respuesta["observacionesProductos"]);
+        $("#observaciones").val(respuesta["observaciones"]);
+      } else {
+        $("#observaciones").val(respuesta["observacionesProductos"]);
       }
-     
-    
-
-    }
-
-  })
-
+    },
+  });
 }
-function verDetalleCompra(idSolicitud){
-
+function verDetalleCompra(idSolicitud) {
   var datos = new FormData();
   datos.append("idSolicitudCompra", idSolicitud);
 
   $.ajax({
-
-    url:"ajax/solicitudesAcciones.php",
+    url: "ajax/solicitudesAcciones.php",
     method: "POST",
     data: datos,
     cache: false,
     contentType: false,
     processData: false,
     dataType: "json",
-    success: function(respuesta){ 
-           
-            var  productos = JSON.parse(respuesta[0]);
-            
-            
-            body = document.getElementById("tablaDetalleCompras");
+    success: function (respuesta) {
+      var productos = JSON.parse(respuesta[0]);
 
+      body = document.getElementById("tablaDetalleCompras");
 
-            tblBody = document.createElement("tbody");
+      tblBody = document.createElement("tbody");
 
-            var arregloNombres = ['codigoProducto','descripcion','precioProducto','unidadMedida'];
+      var arregloNombres = [
+        "codigoProducto",
+        "descripcion",
+        "precioProducto",
+        "unidadMedida",
+        "cantidad",
+      ];
 
-            // Crea las celdas
-            for (var i = 0; i < productos.length; i++) {
-              // Crea las hileras de la tabla
-              var hilera = document.createElement("tr");
-           
-              for (var j = 0; j < arregloNombres.length; j++) {
-               
+      // Crea las celdas
+      for (var i = 0; i < productos.length; i++) {
+        // Crea las hileras de la tabla
+        var hilera = document.createElement("tr");
 
-                var celda = document.createElement("td");
-                if (arregloNombres[j] == "precioProducto") {
-                  var unidad = '$ '+productos[i][arregloNombres[j]]+'';
-                  var textoCelda = document.createTextNode(unidad);
-                }else{
-                  var textoCelda = document.createTextNode(productos[i][arregloNombres[j]]);
-                }
-                
-                celda.appendChild(textoCelda);
-                hilera.appendChild(celda);
-               
-              }
-           
-              // agrega la hilera al final de la tabla (al final del elemento tblbody)
-              tblBody.appendChild(hilera);
-            }
-           
-            // appends <table> into <body>
-            body.appendChild(tblBody);
-            
-      /*
-  
-      */
+        for (var j = 0; j < arregloNombres.length; j++) {
+          var celda = document.createElement("td");
+          if (arregloNombres[j] == "precioProducto") {
+            var unidad = "$ " + productos[i][arregloNombres[j]] + "";
+            var textoCelda = document.createTextNode(unidad);
+          } else {
+            var textoCelda = document.createTextNode(
+              productos[i][arregloNombres[j]]
+            );
+          }
 
-    }
-
-  })
-
-}
-function eliminarProductos(){
-      var nodos = document.getElementById('tablaDetalleCompras');
-        while (nodos.firstChild) {
-          nodos.removeChild(nodos.firstChild);
+          celda.appendChild(textoCelda);
+          hilera.appendChild(celda);
         }
+
+        // agrega la hilera al final de la tabla (al final del elemento tblbody)
+        tblBody.appendChild(hilera);
+      }
+
+      // appends <table> into <body>
+      body.appendChild(tblBody);
+
+      var datos = new FormData();
+      datos.append("idSolicitudCompraMarca", idSolicitud);
+
+      $.ajax({
+        url: "ajax/solicitudesAcciones.php",
+        method: "POST",
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        dataType: "json",
+        success: function (response) {
+          var productos = response;
+
+          console.log(productos);
+
+          bodyMarca = document.getElementById("tablaDetalleMarca");
+
+          tblBodyMarca = document.createElement("tbody");
+
+          var arregloNombresMarca = ["marca", "precioVenta"];
+
+          // Crea las celdas
+          for (var i = 0; i < productos.length; i++) {
+            // Crea las hileras de la tabla
+            var hileraMarca = document.createElement("tr");
+
+            for (var j = 0; j < arregloNombresMarca.length; j++) {
+              var celdaMarca = document.createElement("td");
+              if (arregloNombresMarca[j] == "precioVenta") {
+                var unidad = "$ " + productos[i][arregloNombresMarca[j]] + "";
+                var textoCeldaMarca = document.createTextNode(unidad);
+              } else {
+                var textoCeldaMarca = document.createTextNode(
+                  productos[i][arregloNombresMarca[j]]
+                );
+              }
+
+              celdaMarca.appendChild(textoCeldaMarca);
+              hileraMarca.appendChild(celdaMarca);
+            }
+
+            // agrega la hilera al final de la tabla (al final del elemento tblbody)
+            tblBodyMarca.appendChild(hileraMarca);
+          }
+
+          // appends <table> into <body>
+          bodyMarca.appendChild(tblBodyMarca);
+        },
+      });
+    },
+  });
+}
+function eliminarProductos() {
+  var nodos = document.getElementById("tablaDetalleCompras");
+  while (nodos.firstChild) {
+    nodos.removeChild(nodos.firstChild);
+  }
+  var nodos2 = document.getElementById("tablaDetalleMarca");
+  while (nodos2.firstChild) {
+    nodos2.removeChild(nodos2.firstChild);
+  }
 }

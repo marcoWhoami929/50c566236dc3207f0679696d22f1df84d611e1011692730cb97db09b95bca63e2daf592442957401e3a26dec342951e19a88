@@ -12,17 +12,23 @@
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="row">
 
-                            <div class="col-lg-2 col-md-2  col-sm-2">
-                                <label class="">Sucursal</label>
-                                <select class="form-control" id="sucursal" onchange="cargarCompras(1);">
-                                    <option value="">Todas</option>
-                                    <option value="San Manuel">San Manuel</option>
-                                    <option value="Santiago">Santiago</option>
-                                    <option value="Reforma">Reforma</option>
-                                    <option value="Capu">Capu</option>
-                                    <option value="Las Torres">Las Torres</option>
+                            <?php
+                            if ($_SESSION["perfil"] != "Administrador") {
+                                echo "<input type='hidden' id='sucursal' class='form-control' value='" . substr($_SESSION["nombre"], 9) . "'>";
+                            } else {
+                                echo " <div class='col-lg-2 col-md-2  col-sm-2'>
+                                <label class=''>Sucursal</label>
+                                <select class='form-control' id='sucursal' onchange='cargarCompras(1);'>
+                                    <option value=''>Todas</option>
+                                    <option value='San Manuel'>San Manuel</option>
+                                    <option value='Santiago'>Santiago</option>
+                                    <option value='Reforma'>Reforma</option>
+                                    <option value='Capu'>Capu</option>
+                                    <option value='Las Torres'>Las Torres</option>
                                 </select>
-                            </div>
+                            </div>";
+                            }
+                            ?>
 
                             <div class="col-lg-2 col-md-2  col-sm-2">
                                 <label class="">Proceso</label>
@@ -45,7 +51,7 @@
                                     <option value="0">Cancelado</option>
                                 </select>
                             </div>
-                           
+
                             <div class="col-lg-2 col-md-2  col-sm-2">
                                 <label class="">Mostrar</label>
                                 <select class="form-control" id="per_page" onchange="cargarCompras(1);">
@@ -192,70 +198,6 @@ MODAL MOSTRAR DATOS DEL CLIENTE
 </div>
 <!-- Modal Ver Datos Facturacion-->
 
-<div class="modal fade" id="modalVerDatosFacturacion" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-
-                <button type="button" class="btn btn-success btn-rounded btn-icon" data-dismiss="modal" aria-label="Close">
-                    <i class="ti-close"></i>
-                </button>
-                <h5 class="modal-title">DATOS DE FACTURACIÓN</h5>
-
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-12 grid-margin stretch-card">
-                        <div class="card">
-                            <div class="card-body">
-                                <h4 class="card-title">Datos cliente</h4>
-                                <p class="card-description" id="nombreCliente">
-
-                                </p>
-                                <form class="forms-sample">
-
-                                    <div class="form-group">
-                                        <label>RFC</label>
-                                        <input type="text" class="form-control" id="rfc" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Razón Social:</label>
-                                        <input type="text" class="form-control" id="razonSocial" disabled>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Dirección Fiscal:</label>
-                                        <textarea class="form-control" id="direccionFiscal" rows="4"></textarea>
-                                    </div>
-                                     <div class="form-group">
-                                        <label>Código Postal:</label>
-                                        <input type="text" class="form-control" id="codigoPostal" disabled>
-                                    </div>
-                                     <div class="form-group">
-                                        <label>Correo Electrónico:</label>
-                                        <input type="text" class="form-control" id="correo" disabled>
-                                    </div>
-                                      <div class="form-group">
-                                        <label>Uso Cfdi:</label>
-                                        <input type="text" class="form-control" id="usoCfdi" disabled>
-                                    </div>
-
-
-
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                  
-                </div>
-               
-            </div>
-            <div class="modal-footer">
-
-                <button type="button" class="btn btn-info" id="salir" data-dismiss="modal">Salir</button>
-            </div>
-        </div>
-    </div>
-</div>
 <div class="modal fade" id="modalVerObservaciones" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
@@ -279,17 +221,17 @@ MODAL MOSTRAR DATOS DEL CLIENTE
                                 <form class="forms-sample">
 
                                     <div class="form-group">
-                                       
+
                                         <textarea class="form-control" id="observaciones" rows="4"></textarea>
                                     </div>
-            
+
                                 </form>
                             </div>
                         </div>
                     </div>
-                  
+
                 </div>
-               
+
             </div>
             <div class="modal-footer">
 
@@ -315,50 +257,51 @@ MODAL MOSTRAR DATOS DEL CLIENTE
                         <div class="card">
                             <div class="card-body" id="detalleCompras">
                                 <h4 class="card-title">Detalle</h4>
-                                  <p class="card-description">
-                                    
-                                  </p>
-                                  <div class="table-responsive">
+                                <p class="card-description">
+
+                                </p>
+                                <div class="table-responsive">
                                     <table class="table" id="tablaDetalleCompras">
-                                      <thead>
-                                        <tr>
-                                          <th>Codigo</th>
-                                          <th>Descripcion</th>
-                                          <th>Precio</th>
-                                          <th>Unidad</th>
-                                        </tr>
-                                      </thead>
-                                    
+                                        <thead>
+                                            <tr>
+                                                <th>Codigo</th>
+                                                <th>Descripcion</th>
+                                                <th>Precio</th>
+                                                <th>Unidad</th>
+                                                <th>Cantidad</th>
+                                            </tr>
+                                        </thead>
+
                                     </table>
-                                  </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                     <div class="col-md-4 grid-margin stretch-card">
+                    <div class="col-md-4 grid-margin stretch-card">
                         <div class="card">
                             <div class="card-body">
                                 <h4 class="card-title">Venta Por Marca</h4>
-                                  <p class="card-description">
-                                    
-                                  </p>
-                                  <div class="table-responsive">
+                                <p class="card-description">
+
+                                </p>
+                                <div class="table-responsive">
                                     <table class="table" id="tablaDetalleMarca">
-                                      <thead>
-                                        <tr>
-                                          <th>Marca</th>
-                                          <th>Monto</th>
-                                          
-                                        </tr>
-                                      </thead>
-                                    
+                                        <thead>
+                                            <tr>
+                                                <th>Marca</th>
+                                                <th>Monto</th>
+
+                                            </tr>
+                                        </thead>
+
                                     </table>
-                                  </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                  
+
                 </div>
-               
+
             </div>
             <div class="modal-footer">
 

@@ -1342,26 +1342,6 @@ class ModelFunctions extends database
 
         $stmt = null;
     }
-    /*=============================================
-	MOSTRAR NOTIFICACIONES APP
-	=============================================*/
-
-    public function mdlMostrarNotificacionesApp($tabla, $item, $valor)
-    {
-
-        $stmt = $this->mysqli->prepare("SELECT $item as total,concluidas FROM $tabla");
-
-        $stmt->bindParam(":" . $item, $valor, PDO::PARAM_STR);
-
-        $stmt->execute();
-
-        return $stmt->fetch();
-
-        $stmt->close();
-
-        $stmt = null;
-    }
-
 
     /*=============================================
 	ACTUALIZAR NOTIFICACIONES
@@ -1424,5 +1404,105 @@ class ModelFunctions extends database
 
         $stmt = null;
     }
+    /*=============================================
+    VER DETALLE COMPRA MARCA
+    =============================================*/
 
+    public function mdlMostrarDetalleCompraMarca($tabla, $item, $valor)
+    {
+
+        $stmt = $this->mysqli->prepare("SELECT marca,sum(total) as precioVenta FROM $tabla as sol INNER JOIN masvendido as masv ON sol.idProducto = masv.idMvendido WHERE sol.$item = :$item GROUP by masv.marca");
+
+        $stmt->bindParam(":" . $item, $valor, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+
+        $stmt->close();
+
+        $stmt = null;
+    }
+    /*=============================================
+	MOSTRAR NOTIFICACIONES APP
+	=============================================*/
+
+    public function mdlMostrarNotificacionesApp($tabla, $item, $valor)
+    {
+
+        $stmt = $this->mysqli->prepare("SELECT $item as total,concluidas FROM $tabla");
+
+        $stmt->bindParam(":" . $item, $valor, PDO::PARAM_STR);
+
+        $stmt->execute();
+
+        return $stmt->fetch();
+
+        $stmt->close();
+
+        $stmt = null;
+    }
+    public function mdlMostarTotalSolicitudes($valor, $valor2)
+    {
+
+        $stmt = $this->mysqli->prepare("SELECT count(id) as total FROM solicitudes where tipoSolicitud in('" . $valor . "','" . $valor2 . "')");
+
+        $stmt->execute();
+
+        return $stmt->fetch();
+        $stmt->close();
+
+        $stmt = null;
+    }
+    public function mdlMostrarAcumuladoCompras()
+    {
+
+        $stmt = $this->mysqli->prepare("SELECT SUM(acumulado) as acumulado FROM user");
+
+        $stmt->execute();
+
+        return $stmt->fetch();
+        $stmt->close();
+
+        $stmt = null;
+    }
+    public function mdlMostrarListaCompradores()
+    {
+
+        $stmt = $this->mysqli->prepare("SELECT cliente,COUNT(id) as total FROM `solicitudes` GROUP by cliente");
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+        $stmt->close();
+
+        $stmt = null;
+    }
+    public function mdlMostrarProductosSolicitados($tabla)
+    {
+
+        $stmt = $this->mysqli->prepare("SELECT masv.codigoProducto,masv.descripcion,masv.marca,pro.precioVenta, COUNT(*) as ventas FROM $tabla as pro inner join masvendido as masv ON pro.idProducto = masv.idMvendido
+            GROUP BY pro.idProducto HAVING COUNT(*)>=1");
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+
+        $stmt->close();
+
+        $stmt = null;
+    }
+    public function mdlMostrarClientesRegistrados($tabla)
+    {
+
+        $stmt = $this->mysqli->prepare("SELECT * FROM $tabla where acumulado != 0");
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+
+        $stmt->close();
+
+        $stmt = null;
+    }
 }

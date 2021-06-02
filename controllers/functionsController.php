@@ -1320,19 +1320,7 @@ class ControllerFunctions
 
         return $respuesta;
     }
-    /*=============================================
-	MOSTRAR NOTIFICACIONES APP
-	=============================================*/
 
-    public function ctrMostrarNotificacionesApp($item, $valor)
-    {
-
-        $tabla = "notificacionesapp";
-
-        $respuesta = $this->modelo->mdlMostrarNotificacionesApp($tabla, $item, $valor);
-
-        return $respuesta;
-    }
     /*=============================================
     MOSTRAR OBSERVACIONES
     =============================================*/
@@ -1356,6 +1344,58 @@ class ControllerFunctions
         $tabla = "solicitudes";
 
         $respuesta = $this->modelo->mdlMostrarDetalleCompra($tabla, $item, $valor);
+
+        return $respuesta;
+    }
+    /*=============================================
+    VER DETALLE COMPRA MARCA
+    =============================================*/
+
+    public function ctrMostrarDetalleCompraMarca($item, $valor)
+    {
+
+        $tabla = "productossolicitudes";
+
+        $respuesta = $this->modelo->mdlMostrarDetalleCompraMarca($tabla, $item, $valor);
+
+        return $respuesta;
+    }
+    /*=============================================
+	MOSTRAR NOTIFICACIONES APP
+	=============================================*/
+
+    public function ctrMostrarNotificacionesApp($item, $valor)
+    {
+
+        $tabla = "notificacionesapp";
+
+        $respuesta =  $this->modelo->mdlMostrarNotificacionesApp($tabla, $item, $valor);
+
+        return $respuesta;
+    }
+    /*=============================================
+	MOSTRAR PRODUCTOS SOLICITADOS
+	=============================================*/
+
+    public function ctrMostrarProductosSolicitados()
+    {
+
+        $tabla = "productossolicitudes";
+
+        $respuesta =  $this->modelo->mdlMostrarProductosSolicitados($tabla);
+
+        return $respuesta;
+    }
+    /*=============================================
+	MOSTRAR CLIENTES REGISTRADOS
+	=============================================*/
+
+    public function ctrMostrarClientesRegistrados()
+    {
+
+        $tabla = "user";
+
+        $respuesta =  $this->modelo->mdlMostrarClientesRegistrados($tabla);
 
         return $respuesta;
     }

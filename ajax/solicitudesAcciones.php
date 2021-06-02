@@ -71,7 +71,18 @@ class SolicitudesAcciones
         $valor = $this->idSolicitudCompra;
 
         $respuesta = $this->controller->ctrMostrarDetalleCompra($item, $valor);
-        
+
+        echo json_encode($respuesta);
+    }
+    public $idSolicitudCompraMarca;
+    public function ajaxVerDetalleCompraMarca()
+    {
+
+        $item = "idSolicitud";
+        $valor = $this->idSolicitudCompraMarca;
+
+        $respuesta = $this->controller->ctrMostrarDetalleCompraMarca($item, $valor);
+
         echo json_encode($respuesta);
     }
 }
@@ -119,4 +130,13 @@ if (isset($_POST["idSolicitudCompra"])) {
     $verDetalleCompra = new SolicitudesAcciones();
     $verDetalleCompra->idSolicitudCompra = $_POST["idSolicitudCompra"];
     $verDetalleCompra->ajaxVerDetalleCompra();
+}
+/*==============================================
+VER DETALLE COMPRA MARCA
+==============================================*/
+if (isset($_POST["idSolicitudCompraMarca"])) {
+
+    $verDetalleCompraMarca = new SolicitudesAcciones();
+    $verDetalleCompraMarca->idSolicitudCompraMarca = $_POST["idSolicitudCompraMarca"];
+    $verDetalleCompraMarca->ajaxVerDetalleCompraMarca();
 }

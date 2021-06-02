@@ -12,17 +12,24 @@
                     <div class="col-lg-12 col-md-12 col-sm-12">
                         <div class="row">
 
-                            <div class="col-lg-2 col-md-2  col-sm-2">
-                                <label class="">Sucursal</label>
-                                <select class="form-control" id="sucursal" onchange="cargarSolicitudes(1);">
-                                    <option value="">Todas</option>
-                                    <option value="San Manuel">San Manuel</option>
-                                    <option value="Santiago">Santiago</option>
-                                    <option value="Reforma">Reforma</option>
-                                    <option value="Capu">Capu</option>
-                                    <option value="Las Torres">Las Torres</option>
+                            <?php
+                            if ($_SESSION["perfil"] != "Administrador") {
+                                echo "<input type='hidden' id='sucursal' class='form-control' value='" . substr($_SESSION["nombre"], 9) . "'>";
+                            } else {
+                                echo " <div class='col-lg-2 col-md-2  col-sm-2'>
+                                <label class=''>Sucursal</label>
+                                <select class='form-control' id='sucursal' onchange='cargarSolicitudes(1);'>
+                                    <option value=''>Todas</option>
+                                    <option value='San Manuel'>San Manuel</option>
+                                    <option value='Santiago'>Santiago</option>
+                                    <option value='Reforma'>Reforma</option>
+                                    <option value='Capu'>Capu</option>
+                                    <option value='Las Torres'>Las Torres</option>
                                 </select>
-                            </div>
+                            </div>";
+                            }
+                            ?>
+
 
                             <div class="col-lg-2 col-md-2  col-sm-2">
                                 <label class="">Proceso</label>
@@ -75,6 +82,17 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-lg-4 col-md-4  col-sm-4">
+                                <div class="row">
+                                    <div class="col-lg-9 col-md-9 col-sm-9">
+                                        <button type="button" class="btn btn-primary btn-icon-text btn-rounded" onclick="cargarSolicitudes(1);">
+                                            <i class="ti-clipboard btn-icon-prepend"></i>Actualizar
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -236,15 +254,15 @@ MODAL MOSTRAR DATOS DEL CLIENTE
                                         <label>Dirección Fiscal:</label>
                                         <textarea class="form-control" id="direccionFiscal" rows="4"></textarea>
                                     </div>
-                                     <div class="form-group">
+                                    <div class="form-group">
                                         <label>Código Postal:</label>
                                         <input type="text" class="form-control" id="codigoPostal" disabled>
                                     </div>
-                                     <div class="form-group">
+                                    <div class="form-group">
                                         <label>Correo Electrónico:</label>
                                         <input type="text" class="form-control" id="correo" disabled>
                                     </div>
-                                      <div class="form-group">
+                                    <div class="form-group">
                                         <label>Uso Cfdi:</label>
                                         <input type="text" class="form-control" id="usoCfdi" disabled>
                                     </div>
@@ -255,9 +273,9 @@ MODAL MOSTRAR DATOS DEL CLIENTE
                             </div>
                         </div>
                     </div>
-                  
+
                 </div>
-               
+
             </div>
             <div class="modal-footer">
 
@@ -289,17 +307,17 @@ MODAL MOSTRAR DATOS DEL CLIENTE
                                 <form class="forms-sample">
 
                                     <div class="form-group">
-                                       
+
                                         <textarea class="form-control" id="observaciones" rows="4"></textarea>
                                     </div>
-            
+
                                 </form>
                             </div>
                         </div>
                     </div>
-                  
+
                 </div>
-               
+
             </div>
             <div class="modal-footer">
 

@@ -116,6 +116,31 @@ class data extends database
         $this->setCounter($nums_row);
         return $query;
     }
+    public function getGanadores($tabla, $campos, $search)
+    {
+        $offset = $search['offset'];
+        $per_page  = $search['per_page'];
+
+
+        $sWhere = " us.nombreCompleto" . " LIKE '%" . $search['query'] . "%' ";
+
+        if ($search['sucursal'] != "") {
+            $sWhere .= " and sol.sucursal = '" . $search['sucursal'] . "'";
+        }
+
+        $sWhere .= "ORDER BY gan.fecha DESC";
+
+        $sql = "SELECT $campos FROM $tabla as gan inner join user as us ON gan.idCliente = us.id inner join solicitudes as sol ON gan.idSolicitud = sol.id where $sWhere LIMIT $offset,$per_page";
+        $query = $this->mysqli->query($sql);
+
+        $sql1 = "SELECT $campos FROM  $tabla  as gan inner join user as us ON gan.idCliente = us.id inner join solicitudes as sol ON gan.idSolicitud = sol.id where $sWhere";
+
+        $nums_row = $this->countAll($sql1);
+
+        //Set counter
+        $this->setCounter($nums_row);
+        return $query;
+    }
     function setCounter($counter)
     {
         $this->counter = $counter;

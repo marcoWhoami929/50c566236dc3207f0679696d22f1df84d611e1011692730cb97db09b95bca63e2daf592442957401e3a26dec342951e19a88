@@ -22329,3 +22329,8 @@ dl li {
   width: 100%;
   height: 50%;
 }
+.estilosNotificaciones {
+  color: white;
+  font-weight: bold;
+  font-size: 22px;
+}
