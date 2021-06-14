@@ -153,13 +153,17 @@ if (isset($_POST['solicitudProceso'])) {
             $nuevaNotificacion = mysqli_query($conn, "UPDATE notificacionesapp SET $sucursal = '$valor' + 1");
         }
     }
-
-    $titulo = "Hola";
-    $mensaje = "Un cliente ha realizado una nueva solicitud";
+    if ($tipoSolicitud == 1) {
+        $accion = "solicitado una recolección";
+    } else {
+        $accion = "realizado una compra de productos de un total de " . number_format($compras, 2) . "";
+    }
+    $titulo = "SUCURSAL " . $sucursalElegida . " HAY UNA NUEVA SOLICITUD";
+    $mensaje = "" . $nombreCliente . " ha " . $accion . "  con folio " . $ultimoIdentificador . "";
 
     ////////ENVÍO DE NOTIFICACIÓN/////////
     $fcmUrl = 'https://fcm.googleapis.com/fcm/send';
-    $token = 'db1ZdQXxXIw:APA91bGuq33c-uddz8tK3HpvN54xroZvoH2vmawZ1pS2Ptj4whALkCSdpy_gTec-0wDuxz-f_IGeIPe6NTZuYE5yijT88-EbCCh3yb9cFr293xE6k1X2xeoITqPjboX0IeG313TGUQeZ';
+    $token = 'fjIjTpLaIm4:APA91bGEXLXomNJnjgPOLew217nCgCn8VWo78tTBmRFWZ_kyHY6Kc5P96DAtv5L5qrUr8qKDsEErMnIimJ3hsnDTAuxDlvitzlCDqMer67VCa0DvTzMFz_DodoguTz0ZYXL8uC8DVFll';
     $apiKey = 'AAAADfhsy0M:APA91bFveoivL5ETkrfu9ydjtuFyzTYvllqDpLqTl4iLIav8qsXIlFMYscHASU0FPpiBy_yNpLdRRthZj6TI8DOPXmVyzYn2qu48plV7R_PSpbnW44V-eLeezrLYRrXubd8NGs9vqcX2';
     $notification = ['title' => $titulo, 'body' => $mensaje, 'icon' => 'myIcon', 'sound' => 'mySound'];
     $extraNotificationData = ["message" => $notification, "moredata" => 'dd'];

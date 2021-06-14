@@ -81,7 +81,7 @@
 })(jQuery);
 $(function () {
   actualizaSolicitudes();
-  //setInterval("actualizaSolicitudes()", 6000);
+  setInterval("actualizaSolicitudes()", 6000);
 
   var url = window.location.pathname;
 

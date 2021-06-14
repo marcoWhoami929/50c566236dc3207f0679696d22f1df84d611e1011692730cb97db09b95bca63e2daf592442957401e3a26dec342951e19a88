@@ -1,44 +1,48 @@
+(async () => {
+  const respuestaRaw = await fetch("ajax/dataCharts.php");
+
+  const respuesta = await respuestaRaw.json();
+
+  const $grafica = document.querySelector("#recolecciones");
+
+  const etiquetas = respuesta.etiquetas;
+
+  const datosSolicitudesAcumuladas = {
+    label: "# de solicitudes",
+    data: respuesta.datos,
+    backgroundColor: "rgba(255, 99, 132, 0.2)", // Color de fondo
+    borderColor: "rgba(255,99,132,1)", // Color del borde
+
+    borderWidth: 1,
+    fill: true,
+  };
+  new Chart($grafica, {
+    type: "line",
+    data: {
+      labels: etiquetas,
+      datasets: [datosSolicitudesAcumuladas],
+    },
+    options: {
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+            },
+          },
+        ],
+      },
+    },
+  });
+})();
+
 $(function () {
   /* ChartJS
    * -------
    * Data and config for chartjs
    */
   "use strict";
-  var dataSolicitudes = {
-    labels: [
-      "Junio",
-      "Julio",
-      "Agosto",
-      "Septiembre",
-      "Octubre",
-      "Noviembre",
-      "Diciembre",
-    ],
-    datasets: [
-      {
-        label: "# de solicitudes",
-        data: [5, 7, 4, 5, 2, 3, 4],
-        backgroundColor: [
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-        ],
-        borderColor: [
-          "rgba(255,99,132,1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(255, 206, 86, 1)",
-          "rgba(75, 192, 192, 1)",
-          "rgba(153, 102, 255, 1)",
-          "rgba(255, 159, 64, 1)",
-        ],
-        borderWidth: 1,
-        fill: false,
-      },
-    ],
-  };
+
   var dataCompras = {
     labels: [
       "Junio",
@@ -336,14 +340,6 @@ $(function () {
     });
   }
 
-  if ($("#recolecciones").length) {
-    var recoleccionesChart = $("#recolecciones").get(0).getContext("2d");
-    var lineChart = new Chart(recoleccionesChart, {
-      type: "line",
-      data: dataSolicitudes,
-      options: options,
-    });
-  }
   if ($("#compras").length) {
     var comprasChart = $("#compras").get(0).getContext("2d");
     var lineChart = new Chart(comprasChart, {

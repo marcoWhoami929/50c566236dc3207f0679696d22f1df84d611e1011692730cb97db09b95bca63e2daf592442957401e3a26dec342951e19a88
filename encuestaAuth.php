@@ -22,7 +22,7 @@ if (isset($_POST['login'])) {
 			echo json_encode($datosUsuario);
 		}
 	} else {
-		echo "fail";
+		echo "failed";
 	}
 }
 /**
@@ -177,7 +177,7 @@ if (isset($_POST['finalizacionEncuesta'])) {
 
 		echo "success";
 	} else {
-		echo "fail";
+		echo "failed";
 	}
 }
 /*****LISTAR LOS PROVEEDORES ********/
@@ -194,4 +194,131 @@ if (isset($_POST['listarProveedores'])) {
 	} else {
 		echo 'failed';
 	}
+}
+/*****LISTAR LAS TIENDAS CERCANAS ********/
+if (isset($_POST['localizacionProveedores'])) {
+	function getBoundaries($lat, $lng, $distance)
+	{
+		$return = array();
+
+		// Los angulos para cada dirección
+		$cardinalCoords = array(
+			'north' => '0',
+			'south' => '180',
+			'east' => '90',
+			'west' => '270'
+		);
+
+		$rLat = deg2rad($lat);
+		$rLng = deg2rad($lng);
+		$rAngDist = $distance / 6371;
+
+		foreach ($cardinalCoords as $name => $angle) {
+			$rAngle = deg2rad($angle);
+			$rLatB = asin(sin($rLat) * cos($rAngDist) + cos($rLat) * sin($rAngDist) * cos($rAngle));
+			$rLonB = $rLng + atan2(sin($rAngle) * sin($rAngDist) * cos($rLat), cos($rAngDist) - sin($rLat) * sin($rLatB));
+
+			$return[$name] = array(
+				'lat' => (float) rad2deg($rLatB),
+				'lng' => (float) rad2deg($rLonB)
+			);
+		}
+
+		return array(
+			'min_lat'  => $return['south']['lat'],
+			'max_lat' => $return['north']['lat'],
+			'min_lng' => $return['west']['lng'],
+			'max_lng' => $return['east']['lng']
+		);
+	}
+
+	$latitud = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST['latitud'])));
+	$longitud = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST['longitud'])));
+
+	$lat =  $latitud;
+	$lng = $longitud;
+	$distance = 1; // Sitios que se encuentren en un radio de 1KM
+	$box = getBoundaries($lat, $lng, $distance);
+
+	$localizarProveedores = mysqli_query($conn, 'SELECT *, ( 6371 * ACOS( 
+		COS( RADIANS(' . $lat . ') ) 
+		* COS(RADIANS( latitud ) ) 
+		* COS(RADIANS( longitud ) 
+		- RADIANS(' . $lng . ') ) 
+		+ SIN( RADIANS(' . $lat . ') ) 
+		* SIN(RADIANS( latitud ) ) 
+	   )
+) AS distance 
+FROM proveedores 
+WHERE (latitud BETWEEN ' . $box['min_lat'] . ' AND ' . $box['max_lat'] . ')
+AND (longitud BETWEEN ' . $box['min_lng'] . ' AND ' . $box['max_lng'] . ')
+HAVING distance < ' . $distance . '
+ORDER BY distance ASC');
+
+	if (mysqli_num_rows($localizarProveedores) != 0) {
+		$data = array();
+		while ($m = $localizarProveedores->fetch_assoc()) {
+			$data[] = $m;
+		}
+		echo json_encode($data);
+	} else {
+		echo 'failed';
+	}
+}
+/*****DATOS PROVEEDOR ********/
+if (isset($_POST['datosProveedor'])) {
+	$idProveedor = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST['idProveedor'])));
+	$datos = mysqli_query($conn, "SELECT * FROM proveedores WHERE id = '$idProveedor'  ");
+
+	if (mysqli_num_rows($datos) != 0) {
+		$data = array();
+		while ($m = $datos->fetch_assoc()) {
+			$data[] = $m;
+		}
+		echo json_encode($data);
+	} else {
+		echo 'failed';
+	}
+}
+/*****ACTUALIZAR DATOS PROVEEDOR ********/
+if (isset($_POST['actualizarDatosProveedor'])) {
+	$id = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST['editarId'])));
+	$tienda = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST['editarTienda'])));
+	$direccion = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST['editarDireccion'])));
+	$latitud = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST['editarLatitud'])));
+	$longitud = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST['editarLongitud'])));
+
+	$actualizarProveedor = mysqli_query($conn, "SELECT * FROM proveedores WHERE id = '$idProveedor'  ");
+
+	$actualizarProveedor = mysqli_query($conn, "UPDATE `proveedores` SET `proveedor` = '$tienda', `direccion` = '$direccion', `latitud` = '$latitud', `longitud` = '$longitud'   WHERE `id` = '$id'");
+
+
+	if ($actualizarProveedor) {
+
+		echo "success";
+	} else {
+
+		echo "failed";
+	}
+}
+/*****NUEVO PROVEEDOR ********/
+if (isset($_POST['nuevoProveedor'])) {
+
+	$tienda = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST['tienda'])));
+	$direccion = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST['direccion'])));
+	$latitud = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST['latitud'])));
+	$longitud = mysqli_real_escape_string($conn, htmlspecialchars(trim($_POST['longitud'])));
+
+
+	$nuevo = mysqli_query($conn, "INSERT INTO  `proveedores`(`proveedor`,`direccion`,`latitud`,`longitud`) values ('$tienda','$direccion','$latitud','$longitud')");
+
+	if ($nuevo) {
+
+		echo "success";
+	} else {
+
+		echo "failed";
+	}
+
+	echo mysqli_error($conn);
 }
