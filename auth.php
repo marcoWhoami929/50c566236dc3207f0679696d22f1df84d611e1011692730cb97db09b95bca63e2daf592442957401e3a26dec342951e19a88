@@ -67,11 +67,13 @@ if (isset($_POST['solicitudProceso'])) {
             $idProducto = $value['idProducto'];
             $idCliente = $value['idCliente'];
             $precioProducto = $value['precioProducto'];
+            $descuento = $value['precioDescuento'];
             $cantidad = $value['cantidad'];
-            $total = $value['precioProducto'] * $value['cantidad'];
+            $importe  = $precioProducto - $descuento;
+            $total = $importe * $value['cantidad'];
             $compras +=  $total;
 
-            $insertar = mysqli_query($conn, "insert into `productossolicitudes` (`idSolicitud`,`idProducto`,`idCliente`,`precioVenta`,`cantidad`,`total`) values ('$ultimoIdentificador','$idProducto','$idCliente','$precioProducto','$cantidad','$total')");
+            $insertar = mysqli_query($conn, "insert into `productossolicitudes` (`idSolicitud`,`idProducto`,`idCliente`,`precioVenta`,`descuento`,`cantidad`,`total`) values ('$ultimoIdentificador','$idProducto','$idCliente','$precioProducto','$descuento','$cantidad','$total')");
         }
         $actualizarAcumulado = mysqli_query($conn, "UPDATE user SET `compras` = (compras+1) WHERE `id` = '$idCliente'");
 

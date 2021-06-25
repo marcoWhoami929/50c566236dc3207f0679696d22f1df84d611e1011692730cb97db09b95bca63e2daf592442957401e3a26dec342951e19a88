@@ -267,6 +267,7 @@ MODAL MOSTRAR DATOS DEL CLIENTE
                                                 <th>Codigo</th>
                                                 <th>Descripcion</th>
                                                 <th>Precio</th>
+                                                <th>Descuento</th>
                                                 <th>Unidad</th>
                                                 <th>Cantidad</th>
                                             </tr>

@@ -32,7 +32,8 @@ class ProductosSolicitados
 				      "' . $productosSolicitados[$i]["descripcion"] . '",
                       "$' . number_format($productosSolicitados[$i]["precioVenta"], 2) . '",
 				      "' . $marca . '",
-				      "' . $productosSolicitados[$i]["ventas"] . '"
+				      "' . $productosSolicitados[$i]["ventas"] . '",
+                      "' . $productosSolicitados[$i]["piezas"] . '"
 				    ],';
         }
 

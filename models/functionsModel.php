@@ -1481,8 +1481,7 @@ class ModelFunctions extends database
     public function mdlMostrarProductosSolicitados($tabla)
     {
 
-        $stmt = $this->mysqli->prepare("SELECT masv.codigoProducto,masv.descripcion,masv.marca,pro.precioVenta, COUNT(*) as ventas FROM $tabla as pro inner join masvendido as masv ON pro.idProducto = masv.idMvendido
-            GROUP BY pro.idProducto HAVING COUNT(*)>=1");
+        $stmt = $this->mysqli->prepare("SELECT mv.codigoProducto,mv.descripcion,mv.precio as precioVenta,mv.marca,COUNT(*) as ventas,sum(ps.cantidad) as piezas  FROM $tabla as ps inner join masvendido as mv ON ps.idProducto = mv.idMvendido  GROUP by ps.idProducto");
 
         $stmt->execute();
 

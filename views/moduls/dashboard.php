@@ -167,6 +167,7 @@ $compradores = $solicitudes->mdlMostrarListaCompradores();
                                         <th style="border:none">Precio</th>
                                         <th style="border:none">Marca</th>
                                         <th style="border:none">#Ventas</th>
+                                        <th style="border:none">#Piezas</th>
                                     </tr>
                                 </thead>
                                 <tbody>

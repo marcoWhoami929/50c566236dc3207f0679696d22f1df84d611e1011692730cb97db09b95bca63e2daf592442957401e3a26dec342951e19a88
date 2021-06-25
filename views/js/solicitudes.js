@@ -285,6 +285,7 @@ function verDetalleCompra(idSolicitud) {
         "codigoProducto",
         "descripcion",
         "precioProducto",
+        "precioDescuento",
         "unidadMedida",
         "cantidad",
       ];
@@ -296,7 +297,10 @@ function verDetalleCompra(idSolicitud) {
 
         for (var j = 0; j < arregloNombres.length; j++) {
           var celda = document.createElement("td");
-          if (arregloNombres[j] == "precioProducto") {
+          if (
+            arregloNombres[j] == "precioProducto" ||
+            arregloNombres[j] == "precioDescuento"
+          ) {
             var unidad = "$ " + productos[i][arregloNombres[j]] + "";
             var textoCelda = document.createTextNode(unidad);
           } else {
