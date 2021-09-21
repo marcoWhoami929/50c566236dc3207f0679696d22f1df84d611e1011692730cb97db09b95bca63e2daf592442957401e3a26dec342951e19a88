@@ -33,7 +33,6 @@ class ControllerTemplate
                     $_SESSION["id"] = $response["id"];
                     $_SESSION["nombre"] = $response["nombre"];
                     $_SESSION["email"] = $response["email"];
-                    $_SESSION["perfil"] = $response["perfil"];
 
 
                     echo '<script>

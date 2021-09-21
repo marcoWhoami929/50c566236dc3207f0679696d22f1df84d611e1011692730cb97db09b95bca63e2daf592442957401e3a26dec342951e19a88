@@ -1,23 +1,20 @@
 <?php
 include('../classes/data.php');
 $action = (isset($_REQUEST['action']) && $_REQUEST['action'] != NULL) ? $_REQUEST['action'] : '';
-if ($action == 'solicitudes') {
+if ($action == 'participantes') {
     $database = new data();
     $query = strip_tags($_REQUEST['query']);
     $estatus = strip_tags($_REQUEST['estatus']);
-    $estado = strip_tags($_REQUEST['estado']);
-    $tipo = strip_tags($_REQUEST['tipo']);
-    $sucursal = strip_tags($_REQUEST['sucursal']);
     $per_page = intval($_REQUEST['per_page']);
-    $tabla = "solicitudes";
+    $tabla = "participantes";
     $campos = "*";
     $page = (isset($_REQUEST["page"]) && !empty($_REQUEST['page'])) ? $_REQUEST['page'] : 1;
     $adjacents = 4;
     $offset = ($page - 1) * $per_page;
 
-    $search = array("query" => $query, "estatus" => $estatus, "estado" => $estado, "tipo" => $tipo, "sucursal" => $sucursal, "per_page" => $per_page, "offset" => $offset);
+    $search = array("query" => $query, "estatus" => $estatus, "per_page" => $per_page, "offset" => $offset);
 
-    $datos = $database->getSolicitudes($tabla, $campos, $search);
+    $datos = $database->getParticipantes($tabla, $campos, $search);
 
     $countAll = $database->getCounter();
     $row = $countAll;
@@ -38,215 +35,42 @@ if ($action == 'solicitudes') {
             <table class="table  table-hover  table-striped dt-responsive tableListaSolicitudes">
                 <thead>
                     <tr>
-                        <th style="border:none">Folio</th>
-                        <th style="border:none">Tipo</th>
-                        <th style="border:none">Cliente</th>
-                        <th style="border:none">Hora</th>
-                        <th style="border:none">Estatus</th>
-                        <th style="border:none">Visto</th>
-                        <th style="border:none">En camino</th>
-                        <th style="border:none">En Proceso</th>
-                        <th style="border:none">En entrega</th>
-                        <th style="border:none">Concluido</th>
-                        <th style="border:none">Pdf</th>
-                        <th style="border:none">Facturar</th>
-                        <th style="border:none">Forma Pago</th>
-                        <th style="border:none">Obs Recoleccion</th>
-                        <th style="border:none">Obs Productos</th>
-                        <th style="border:none">Hora Concluido</th>
-                        <th style="border:none">Tiempo</th>
-                        <th style="border:none">Estatus</th>
+                        <th style="border:none">Id</th>
+                        <th style="border:none"></th>
+                        <th style="border:none">Nombre Completo</th>
+                        <th style="border:none">Facturas Registradas</th>
+                        <th style="border:none">Acumulado Facturas</th>
+                        <th style="border:none">Acumulado Premios</th>
+                        <th style="border:none">Correo</th>
+
                     </tr>
                 </thead>
                 <tbody>
                     <?php
                     $finales = 0;
                     foreach ($datos as $key => $row) {
-                        $sucursal = $row["sucursal"];
-                        if ($row["tiempoProceso"] == "") {
+                        if ($row['facturasRegistradas'] == 0) {
+                            $clase = 'table-warning';
                         } else {
-                            $hora = $row["tiempoProceso"];
-                            list($horas, $minutos, $segundos) = explode(':', $hora);
-                            $hora_en_segundos = ($horas * 3600) + ($minutos * 60) + $segundos;
+                            $clase = 'table-success';
                         }
 
-                        if ($row["motoEnCamino"] != 0) {
-
-                            $motoEnCamino = "<button type='button' class='btn btn-success btn-rounded btn-icon btnHabilitar3' disabled>
-                            <i class='ti-truck'></i>
-                        </button>";
-                        } else {
-
-                            $motoEnCamino = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar3' onclick='recoleccionEnCamino(" . $row["id"] . ",1)'>
-                            <i class='ti-truck'></i>
-                        </button>";
-                        }
-
-
-                        if ($row["enProceso"] != 0) {
-
-                            $enProceso = "<button type='button' class='btn btn-success btn-rounded btn-icon btnHabilitar5' disabled>
-                            <i class='ti-paint-bucket'></i>
-                        </button>";
-                        } else {
-
-                            $enProceso = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar5' onclick='enProceso(" . $row["id"] . ",1)'>
-                            <i class='ti-paint-bucket'></i>
-                        </button>";
-                        }
-
-
-                        if ($row["motoEnCaminoRegreso"] != 0) {
-
-                            $motoEnCaminoRegreso = "<button type='button' class='btn btn-success btn-rounded btn-icon btnHabilitar7'  disabled>
-                            <i class='ti-map-alt'></i>
-                        </button>";
-                        } else {
-
-                            $motoEnCaminoRegreso = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar7' onclick='entregaEnCamino(" . $row["id"] . ",1)'>
-                            <i class='ti-map-alt'></i>
-                        </button>";
-                        }
-
-                        if ($row["concluido"] != 0) {
-
-                            $concluido = "<button type='button' class='btn btn-success btn-rounded btn-icon btnHabilitar8' disabled>
-                            <i class='ti-time'></i>
-                        </button>";
-                        } else {
-                            if ($row["motoEnCamino"] == 1 and $row["enProceso"] == 1 and  $row["motoEnCaminoRegreso"] == 1 and $row["concluido"] == 0) {
-
-                                $concluido = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar8' onclick='concluido(" . $row["id"] . ",1)' >
-                                <i class='ti-time'></i>
-                            </button>";
-                            } else {
-
-                                $concluido = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnHabilitar8'  disabled>
-                                <i class='ti-time'></i>
-                            </button>";
-                            }
-                        }
-
-                        if ($row["tiempoProceso"] == "") {
-
-                            $tiempoProceso = "Sin datos";
-                        } else {
-
-                            $tiempoProceso = $database->seg_a_dhms($hora_en_segundos);
-                        }
-
-                        if ($row["visto"] == 0) {
-
-                            $estatus = "<label class='badge badge-danger'>Sin ver</label>";
-                        }
-                        if ($row["visto"] == 1 and $row["motoEnCamino"] == 1) {
-
-                            $estatus = "<label class='badge badge-warning'>Recolección en Camino</label>";
-                        }
-                        if ($row["visto"] == 1 and $row["motoEnCamino"] == 1 and $row["enProceso"] == 1) {
-
-                            $estatus = "<label class='badge badge-info'>En Proceso</label>";
-                        }
-                        if ($row["visto"] == 1 and $row["motoEnCamino"] == 1 and $row["enProceso"] == 1 and $row["motoEnCaminoRegreso"] == 1) {
-
-                            $estatus = "<label class='badge badge-primary'>Entrega en Camino</label>";
-                        }
-                        if ($row["visto"] == 1 and $row["motoEnCamino"] == 1 and $row["enProceso"] == 1 and $row["motoEnCaminoRegreso"] == 1 and $row["concluido"] == 1) {
-
-                            $estatus = "<label class='badge badge-success'>Concluido</label>";
-                        }
-                        if ($row["listaProductos"] == "[{}]") {
-
-                            $pdf  = "";
-                        } else {
-
-                            $pdf = "<button type='button' class='btn btn-inverse-danger btn-icon btnDescargarSolicitud' onclick='descargarSolicitud(" . $row["id"] . ")'>
-                            <i class='ti-clipboard'></i>
-                        </button>";
-                        }
-                        /******VALIDAR SI LA SOLICITUD HA SIDO VISTA POR EL AGENTE DE VENTA ****/
-                        if ($row["visto"] != 0) {
-
-                            $visto = "<button type='button' class='btn btn-success btn-rounded btn-icon btnVisto' disabled>
-                            <i class='ti-eye'></i>
-                        </button>";
-                        } else {
-
-                            $visto = "<button type='button' class='btn btn-warning btn-rounded btn-icon btnVisto' onclick='solicitudVista(" . $row['id'] . ",1," . '"' . $sucursal . '"' . ")' >
-                            <i class='ti-eye'></i>
-                        </button>";
-                        }
-                        /***********VALIDAR SI EL CLIENTE HA RECIBIDO UN REGALO POR SUS CANTIDAD DE SOLICITUDES******/
-                        if ($row["ganadorRifa"] == 0) {
-
-                            $ganador = "";
-                        } else if ($row["ganadorRifa"] == 1) {
-
-                            $ganador = "<i class='fa fa-gift fa-2x' aria-hidden='true'></i>";
-                        } else if ($row["ganadorRifa"] == 2) {
-
-                            $ganador = "<i class='fa fa-gift fa-2x' aria-hidden='true'></i><i class='fa fa-gift fa-2x' aria-hidden='true'></i>";
-                        } else if ($row["ganadorRifa"] == 3) {
-
-                            $ganador = "<i class='fa fa-gift fa-2x' aria-hidden='true'></i><i class='fa fa-gift fa-2x' aria-hidden='true'></i>";
-                        }
-
-
-                        if ($row["requiereFactura"]) {
-
-                            $requiereFactura = "<button type='button' class='btn btn-inverse-success btn-icon btnVerDatosFacturacion' onclick='verDatosFacturacion(" . $row["idCliente"] . ")' data-toggle='modal' data-target='#modalVerDatosFacturacion'>
-                            <i class='ti-check-box'></i>
-                        </button>";
-                        } else {
-
-                            $requiereFactura = "";
-                        }
-                        $datos = "<button type='button' class='btn btn-inverse-info btn-icon btnVerDatos' onclick='verDatosCliente(" . $row["idCliente"] . ", " . '"' . $sucursal . '"' . ")'  data-toggle='modal' data-target='#modalVerDatos'>
+                        $datos = "<button type='button' class='btn btn-inverse-info btn-icon btnVerDatos' onclick='verDatosParticipante(" . $row["id"] . ")'  data-toggle='modal' data-target='#modalVerDatos'>
                         <i class='ti-info'></i>
                     </button>";
-                        if (trim($row["observaciones"]) == "") {
-                            $observaciones1 = "";
-                        } else {
-                            $observaciones1 = "<button type='button' class='btn btn-info btn-rounded btn-fw' onclick='verObservaciones(" . $row["id"] . ",1)'  data-toggle='modal' data-target='#modalVerObservaciones'><i class='ti-info'></i></button>";
-                        }
-                        if (trim($row["observacionesProductos"]) == "") {
-                            $observaciones2 = "";
-                        } else {
-                            $observaciones2 = "<button type='button' class='btn btn-info btn-rounded btn-fw' onclick='verObservaciones(" . $row["id"] . ",2)'  data-toggle='modal' data-target='#modalVerObservaciones'><i class='ti-info'></i></button>";
-                        }
-                        if ($row['tipoSolicitud'] == 1) {
-                            $tipo = "Recolección";
-                        } else {
-                            $tipo = "Compra";
-                        }
+                        $acumuladoFacturas =  "<strong style='color:orange'>$ " . number_format($row["montoAcumuladoFacturas"], 2) . "</strong>";
+                        $acumuladoPremios =  "<strong style='color:green'>$ " . number_format($row["premio1"], 2) . "</strong>";
 
-                        if ($row["estatus"] == 1) {
-                            $estado = "<button type='button' class='btn btn-inverse-success btn-fw'>Vigente</button>";
-                        } else {
-                            $estado = "<button type='button' class='btn btn-inverse-danger btn-fw'>Cancelado</button>";
-                        }
                     ?>
-                        <tr>
+                        <tr class="<?php echo $clase ?>">
                             <td><?= $row['id'] ?></td>
-                            <td><?= $tipo; ?></td>
-                            <td><?= $row['cliente'] . '<br>' . $datos ?></td>
-                            <td><?= $row['horaSolicitud']; ?></td>
-                            <td><?= $estado ?></td>
-                            <td><?= $visto ?></td>
-                            <td> <?= $motoEnCamino ?></td>
-                            <td> <?= $enProceso ?></td>
-                            <td> <?= $motoEnCaminoRegreso ?></td>
-                            <td> <?= $concluido ?></td>
-                            <td> <?= $pdf ?></td>
-                            <td> <?= $requiereFactura ?></td>
-                            <td><?= $row['formaPago']; ?></td>
-                            <td> <?= $observaciones1 ?></td>
-                            <td> <?= $observaciones2 ?></td>
-                            <td> <?= $row["horaConcluido"] ?></td>
-                            <td> <?= $tiempoProceso ?></td>
-                            <td> <?= $estatus ?></td>
+                            <td><?= $datos ?></td>
+                            <td><strong><?= $row['nombre'] . " " . $row['apellidoPaterno'] . " " . $row['apellidoMaterno'] ?></strong></td>
 
-
+                            <td><?= $row['facturasRegistradas'] ?></td>
+                            <td><?= $acumuladoFacturas ?></td>
+                            <td><?= $acumuladoPremios ?></td>
+                            <td><?= $row['correo'] ?></td>
                         </tr>
                     <?php
                         $finales++;
@@ -265,7 +89,7 @@ if ($action == 'solicitudes') {
 
                 include '../classes/pagination.php'; //include pagination class
                 $pagination = new Pagination($page, $total_pages, $adjacents);
-                echo $pagination->paginateCompras();
+                echo $pagination->paginateParticipantes();
 
                 ?>
             </div>
@@ -273,24 +97,23 @@ if ($action == 'solicitudes') {
     }
 }
 /*
-COMPRAS
- */
-if ($action == 'compras') {
+FACTURAS REGISTRADAS
+*/
+if ($action == 'facturas') {
     $database = new data();
     $query = strip_tags($_REQUEST['query']);
     $estatus = strip_tags($_REQUEST['estatus']);
-    $estado = strip_tags($_REQUEST['estado']);
-    $sucursal = strip_tags($_REQUEST['sucursal']);
+    $serie = strip_tags($_REQUEST['serie']);
     $per_page = intval($_REQUEST['per_page']);
-    $tabla = "solicitudes";
-    $campos = "*";
+    $tabla = "facturasacumula";
+    $campos = "fac.*,part.nombre as participante";
     $page = (isset($_REQUEST["page"]) && !empty($_REQUEST['page'])) ? $_REQUEST['page'] : 1;
     $adjacents = 4;
     $offset = ($page - 1) * $per_page;
 
-    $search = array("query" => $query, "estatus" => $estatus, "estado" => $estado, "sucursal" => $sucursal, "per_page" => $per_page, "offset" => $offset);
+    $search = array("query" => $query, "estatus" => $estatus, "serie" => $serie, "per_page" => $per_page, "offset" => $offset);
 
-    $datos = $database->getCompras($tabla, $campos, $search);
+    $datos = $database->getFacturasRegistradas($tabla, $campos, $search);
 
     $countAll = $database->getCounter();
     $row = $countAll;
@@ -308,110 +131,46 @@ if ($action == 'compras') {
     if ($numrows > 0) {
         ?>
             <div class="table-responsive">
-                <table class="table  table-hover  table-striped dt-responsive tableListaCompras">
+                <table class="table  table-hover  table-striped dt-responsive tableListaSolicitudes">
                     <thead>
                         <tr>
+                            <th style="border:none">Id</th>
+                            <th style="border:none">Nombre Cliente</th>
+                            <th style="border:none">serie</th>
                             <th style="border:none">Folio</th>
-                            <th style="border:none">Cliente</th>
-                            <th style="border:none">Hora</th>
-                            <th style="border:none">Estatus</th>
-                            <th style="border:none">Pdf</th>
-                            <th style="border:none">Detalle</th>
-                            <th style="border:none">Forma Pago</th>
-                            <th style="border:none">Obs Productos</th>
-                            <th style="border:none">Hora Concluido</th>
-                            <th style="border:none">Tiempo</th>
-                            <th style="border:none">Estatus</th>
+                            <th style="border:none">Total Factura</th>
+                            <th style="border:none">Participacion</th>
+                            <th style="border:none">Diferencia</th>
+                            <th style="border:none">Fecha</th>
+                            <th style="border:none">Participante</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php
                         $finales = 0;
                         foreach ($datos as $key => $row) {
-                            $sucursal = $row["sucursal"];
-                            if ($row["tiempoProceso"] == "") {
+                            if ($row['cancelado'] == 0) {
+                                $clase = 'table-success';
                             } else {
-                                $hora = $row["tiempoProceso"];
-                                list($horas, $minutos, $segundos) = explode(':', $hora);
-                                $hora_en_segundos = ($horas * 3600) + ($minutos * 60) + $segundos;
+                                $clase = 'table-warning';
                             }
 
 
-                            if ($row["tiempoProceso"] == "") {
+                            $totalAcumulado = $row["clasificacion1"] + $row["clasificacion2"] + $row["clasificacion3"] + $row["clasificacion4"];
+                            $diferencia = $row['total'] - $totalAcumulado;
+                            $participacion = "<strong style='color:green'>$ " . number_format($totalAcumulado, 2) . "</strong>";
 
-                                $tiempoProceso = "Sin datos";
-                            } else {
-
-                                $tiempoProceso = $database->seg_a_dhms($hora_en_segundos);
-                            }
-
-                            if ($row["visto"] == 0) {
-
-                                $estatus = "<label class='badge badge-danger'>Sin ver</label>";
-                            }
-                            if ($row["visto"] == 1 and $row["motoEnCamino"] == 1) {
-
-                                $estatus = "<label class='badge badge-warning'>Recolección en Camino</label>";
-                            }
-                            if ($row["visto"] == 1 and $row["motoEnCamino"] == 1 and $row["enProceso"] == 1) {
-
-                                $estatus = "<label class='badge badge-info'>En Proceso</label>";
-                            }
-                            if ($row["visto"] == 1 and $row["motoEnCamino"] == 1 and $row["enProceso"] == 1 and $row["motoEnCaminoRegreso"] == 1) {
-
-                                $estatus = "<label class='badge badge-primary'>Entrega en Camino</label>";
-                            }
-                            if ($row["visto"] == 1 and $row["motoEnCamino"] == 1 and $row["enProceso"] == 1 and $row["motoEnCaminoRegreso"] == 1 and $row["concluido"] == 1) {
-
-                                $estatus = "<label class='badge badge-success'>Concluido</label>";
-                            }
-                            if ($row["listaProductos"] == "[{}]") {
-
-                                $pdf  = "";
-                            } else {
-
-                                $pdf = "<button type='button' class='btn btn-inverse-danger btn-icon btnDescargarSolicitud' onclick='descargarSolicitud(" . $row["id"] . ")'>
-                            <i class='ti-clipboard'></i>
-                        </button>";
-                            }
-
-
-                            $datos = "<button type='button' class='btn btn-inverse-info btn-icon btnVerDatos' onclick='verDatosCliente(" . $row["idCliente"] . ", " . '"' . $sucursal . '"' . ")'  data-toggle='modal' data-target='#modalVerDatos'>
-                        <i class='ti-info'></i>
-                    </button>";
-
-                            if (trim($row["observacionesProductos"]) == "") {
-                                $observaciones2 = "";
-                            } else {
-                                $observaciones2 = "<button type='button' class='btn btn-info btn-rounded btn-fw' onclick='verObservaciones(" . $row["id"] . ",2)'  data-toggle='modal' data-target='#modalVerObservaciones'><i class='ti-info'></i></button>";
-                            }
-
-
-                            if ($row["estatus"] == 1) {
-                                $estado = "<button type='button' class='btn btn-inverse-success btn-fw'>Vigente</button>";
-                            } else {
-                                $estado = "<button type='button' class='btn btn-inverse-danger btn-fw'>Cancelado</button>";
-                            }
-                            $detalle = "<button type='button' class='btn btn-warning btn-rounded btn-icon' onclick='verDetalleCompra(" . $row["id"] . ")'  data-toggle='modal' data-target='#modalVerDetalleCompra'>
-                        <i class='ti-eye'></i>
-                      </button>";
                         ?>
-
-                            <tr>
-                                <td><?= $row['id']; ?></td>
-                                <td><?= $row['cliente'] . '<br>' . $datos ?></td>
-                                <td><?= $row['horaSolicitud']; ?></td>
-                                <td><?= $estado ?></td>
-                                <td> <?= $pdf ?></td>
-                                <td><?= $detalle ?></td>
-
-                                <td><?= $row['formaPago']; ?></td>
-                                <td> <?= $observaciones2 ?></td>
-                                <td> <?= $row["horaConcluido"] ?></td>
-                                <td> <?= $tiempoProceso ?></td>
-                                <td> <?= $estatus ?></td>
-
-
+                            <tr class="<?php echo $clase ?>">
+                                <td><?= $row['id'] ?></td>
+                                <td><?= $row['cliente'] ?></td>
+                                <td><strong><?= $row['serie']  ?></strong></td>
+                                <td><?= $row['folio'] ?></td>
+                                <td>$ <?= number_format($row['total'], 2); ?></td>
+                                <td><?= $participacion; ?></td>
+                                <td>$ <?= number_format($diferencia, 2); ?></td>
+                                <td><?= $row['fechaFactura'] ?></td>
+                                <td><?= $row['participante'] ?></td>
                             </tr>
                         <?php
                             $finales++;
@@ -430,7 +189,7 @@ if ($action == 'compras') {
 
                     include '../classes/pagination.php'; //include pagination class
                     $pagination = new Pagination($page, $total_pages, $adjacents);
-                    echo $pagination->paginateCompras();
+                    echo $pagination->paginateFacturasRegistradas();
 
                     ?>
                 </div>
@@ -443,15 +202,16 @@ GANADORES
     if ($action == 'ganadores') {
         $database = new data();
         $query = strip_tags($_REQUEST['query']);
-        $sucursal = strip_tags($_REQUEST['sucursal']);
+        $serie = strip_tags($_REQUEST['serie']);
+        $ganadores = strip_tags($_REQUEST['ganadores']);
         $per_page = intval($_REQUEST['per_page']);
         $tabla = "ganadores";
-        $campos = "sol.id,us.nombreCompleto,gan.fecha as fecha,gan.premio, gan.premio,us.solicitudes,us.compras,us.acumulado,sol.sucursal";
+        $campos = "gan.id,part.nombre as participante,fac.serie,fac.folio,prem.promocion as premio,gan.fecha,gan.ganado";
         $page = (isset($_REQUEST["page"]) && !empty($_REQUEST['page'])) ? $_REQUEST['page'] : 1;
         $adjacents = 4;
         $offset = ($page - 1) * $per_page;
 
-        $search = array("query" => $query, "sucursal" => $sucursal, "per_page" => $per_page, "offset" => $offset);
+        $search = array("query" => $query, "serie" => $serie, "ganadores" => $ganadores, "per_page" => $per_page, "offset" => $offset);
 
         $datos = $database->getGanadores($tabla, $campos, $search);
 
@@ -474,14 +234,13 @@ GANADORES
                     <table class="table  table-hover  table-striped dt-responsive tableListaCompras">
                         <thead>
                             <tr>
-                                <th style="border:none">Folio</th>
-                                <th style="border:none">Cliente</th>
-                                <th style="border:none">Fecha</th>
+                                <th style="border:none">Id</th>
+                                <th style="border:none">Participante</th>
+                                <th style="border:none">Serie y Folio</th>
                                 <th style="border:none">Premio</th>
-                                <th style="border:none">Solicitudes</th>
-                                <th style="border:none">Compras</th>
-                                <th style="border:none">Acumulado Compra</th>
-                                <th style="border:none">Sucursal</th>
+                                <th style="border:none">Detalle</th>
+                                <th style="border:none">Fecha</th>
+
 
                             </tr>
                         </thead>
@@ -489,21 +248,21 @@ GANADORES
                             <?php
                             $finales = 0;
                             foreach ($datos as $key => $row) {
-                                $sucursal = $row["sucursal"];
+                                if ($row['ganado'] == 1) {
+                                    $detalle = "<strong style='color:green'>Ganó su premio exitosamente</strong>";
+                                } else {
+                                    $detalle = "<strong style='color:red'>Ganó pero ya no habia stock del premio</strong>";
+                                }
 
                             ?>
 
                                 <tr>
                                     <td><?= $row['id']; ?></td>
-                                    <td><?= $row['nombreCompleto']; ?></td>
-                                    <td><?= $row['fecha']; ?></td>
+                                    <td><?= $row['participante']; ?></td>
+                                    <td><strong><?= $row['serie'] . " " . $row['folio'] ?></strong></td>
                                     <td><?= $row['premio']; ?></td>
-                                    <td> <?= $row['solicitudes']; ?></td>
-                                    <td><?= $row['compras']; ?></td>
-
-                                    <td><?= "$ " . number_format($row['acumulado'], 2); ?></td>
-                                    <td> <?= $sucursal ?></td>
-
+                                    <td><?= $detalle; ?></td>
+                                    <td> <?= $row['fecha']; ?></td>
                                 </tr>
                             <?php
                                 $finales++;
@@ -522,7 +281,7 @@ GANADORES
 
                         include '../classes/pagination.php'; //include pagination class
                         $pagination = new Pagination($page, $total_pages, $adjacents);
-                        echo $pagination->paginateCompras();
+                        echo $pagination->paginateGanadores();
 
                         ?>
                     </div>

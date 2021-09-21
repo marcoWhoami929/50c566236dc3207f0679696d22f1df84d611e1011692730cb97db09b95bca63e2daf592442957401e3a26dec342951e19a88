@@ -80,135 +80,36 @@
   }
 })(jQuery);
 $(function () {
-  actualizaSolicitudes();
-  setInterval("actualizaSolicitudes()", 6000);
 
   var url = window.location.pathname;
 
   var ruta = url.split("/");
   switch (ruta[2]) {
-    case "dashboard":
-      cargarProductosSolicitados();
-      cargarClientesRegistrados();
+ 
+    case "participantes":
+      cargarParticipantes(1);
       break;
-    case "":
-      cargarProductosSolicitados();
-      cargarClientesRegistrados();
-      break;
-    case "solicitud":
-      cargarSolicitudes(1);
-      break;
-    case "compras":
-      cargarCompras(1);
+    case "facturas":
+      cargarFacturasRegistradas(1);
       break;
     case "ganadores":
       cargarGanadores(1);
       break;
+
   }
 });
-function actualizaSolicitudes() {
-  $(".notificacionesApp").load("views/moduls/notificaciones.php");
-}
+
 /*FUNCIONES TABLAS */
-function cargarProductosSolicitados() {
-  $(".tableProductosSolicitados").DataTable({
-    ajax: "ajax/productosSolicitados.php",
-    deferRender: true,
-    retrieve: true,
-    processing: true,
-    fixedHeader: true,
-    iDisplayLength: 10,
-    order: [[0, "desc"]],
-    /*"scrollX": true,*/
-    lengthMenu: [
-      [10, 25, 50, 100, 150, 200, 300, -1],
-      [10, 25, 50, 100, 150, 200, 300, "All"],
-    ],
-    language: {
-      sProcessing: "Procesando...",
-      sLengthMenu: "Mostrar _MENU_ registros",
-      sZeroRecords: "No se encontraron resultados",
-      sEmptyTable: "Ningún dato disponible en esta tabla",
-      sInfo: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
-      sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0",
-      sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
-      sInfoPostFix: "",
-      sSearch: "Buscar:",
-      sUrl: "",
-      sInfoThousands: ",",
-      sLoadingRecords: "Cargando...",
-      oPaginate: {
-        sFirst: "Primero",
-        sLast: "Último",
-        sNext: "Siguiente",
-        sPrevious: "Anterior",
-      },
-      oAria: {
-        sSortAscending:
-          ": Activar para ordenar la columna de manera ascendente",
-        sSortDescending:
-          ": Activar para ordenar la columna de manera descendente",
-      },
-    },
-  });
-}
-function cargarClientesRegistrados() {
-  $(".tableClientesRegistrados").DataTable({
-    ajax: "ajax/clientesRegistrados.php",
-    deferRender: true,
-    retrieve: true,
-    processing: true,
-    fixedHeader: true,
-    iDisplayLength: 10,
-    order: [[0, "asc"]],
-    /*"scrollX": true,*/
-    lengthMenu: [
-      [10, 25, 50, 100, 150, 200, 300, -1],
-      [10, 25, 50, 100, 150, 200, 300, "All"],
-    ],
-    language: {
-      sProcessing: "Procesando...",
-      sLengthMenu: "Mostrar _MENU_ registros",
-      sZeroRecords: "No se encontraron resultados",
-      sEmptyTable: "Ningún dato disponible en esta tabla",
-      sInfo: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_",
-      sInfoEmpty: "Mostrando registros del 0 al 0 de un total de 0",
-      sInfoFiltered: "(filtrado de un total de _MAX_ registros)",
-      sInfoPostFix: "",
-      sSearch: "Buscar:",
-      sUrl: "",
-      sInfoThousands: ",",
-      sLoadingRecords: "Cargando...",
-      oPaginate: {
-        sFirst: "Primero",
-        sLast: "Último",
-        sNext: "Siguiente",
-        sPrevious: "Anterior",
-      },
-      oAria: {
-        sSortAscending:
-          ": Activar para ordenar la columna de manera ascendente",
-        sSortDescending:
-          ": Activar para ordenar la columna de manera descendente",
-      },
-    },
-  });
-}
-function cargarSolicitudes(page) {
+
+function cargarParticipantes(page) {
   var query = $("#nombre").val();
   var estatus = $("#estatus").val();
-  var estado = $("#estado").val();
-  var tipo = $("#tipo").val();
-  var sucursal = $("#sucursal").val();
   var per_page = $("#per_page").val();
   var parametros = {
-    action: "solicitudes",
+    action: "participantes",
     page: page,
     query: query,
-    sucursal: sucursal,
     estatus: estatus,
-    estado: estado,
-    tipo: tipo,
     per_page: per_page,
   };
   $("#loader").fadeIn("slow");
@@ -219,24 +120,22 @@ function cargarSolicitudes(page) {
       $("#loader").html("Cargando...");
     },
     success: function (data) {
-      $(".datosSolicitudes").html(data).fadeIn("slow");
+      $(".datosParticipantes").html(data).fadeIn("slow");
       $("#loader").html("");
     },
   });
 }
-function cargarCompras(page) {
+function cargarFacturasRegistradas(page) {
   var query = $("#nombre").val();
   var estatus = $("#estatus").val();
-  var estado = $("#estado").val();
-  var sucursal = $("#sucursal").val();
+  var serie = $("#serie").val();
   var per_page = $("#per_page").val();
   var parametros = {
-    action: "compras",
+    action: "facturas",
     page: page,
     query: query,
-    sucursal: sucursal,
     estatus: estatus,
-    estado: estado,
+    serie: serie,
     per_page: per_page,
   };
   $("#loader").fadeIn("slow");
@@ -247,20 +146,22 @@ function cargarCompras(page) {
       $("#loader").html("Cargando...");
     },
     success: function (data) {
-      $(".datosCompras").html(data).fadeIn("slow");
+      $(".datosFacturas").html(data).fadeIn("slow");
       $("#loader").html("");
     },
   });
 }
 function cargarGanadores(page) {
   var query = $("#nombre").val();
-  var sucursal = $("#sucursal").val();
+  var serie = $("#serie").val();
+  var ganadores = $("#ganadores").val();
   var per_page = $("#per_page").val();
   var parametros = {
     action: "ganadores",
     page: page,
     query: query,
-    sucursal: sucursal,
+    serie: serie,
+    ganadores: ganadores,
     per_page: per_page,
   };
   $("#loader").fadeIn("slow");

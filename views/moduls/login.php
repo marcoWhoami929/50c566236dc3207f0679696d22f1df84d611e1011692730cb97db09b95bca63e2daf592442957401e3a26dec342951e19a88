@@ -6,7 +6,7 @@
                     <div class="brand-logo">
                         <img src="views/images/logo-header-mini.png" alt="logo">
                     </div>
-                    <h4>DEKKERAPP</h4>
+                    <h4>SORTEO ACUMULA Y GANA</h4>
                     <h6 class="font-weight-light"></h6>
                     <form class="pt-3" method="post">
                         <div class="form-group">

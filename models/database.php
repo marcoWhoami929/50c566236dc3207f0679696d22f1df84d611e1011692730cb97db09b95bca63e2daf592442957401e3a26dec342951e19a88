@@ -5,7 +5,7 @@ class database
     private $host = "localhost";
     private $user = "root";
     private $pass = "";
-    private $db = "sanfranc_matriz";
+    private $db = "rifa";
     public $counter;
 
     public function conectar()

@@ -9,31 +9,25 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="solicitud">
-                    <i class="ti-pin menu-icon"></i>
-                    <span class="menu-title">Solicitudes</span>
+                <a class="nav-link" href="participantes">
+                    <i class="ti-user menu-icon"></i>
+                    <span class="menu-title">Participantes</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="compras">
-                    <i class="ti-shopping-cart-full menu-icon"></i>
-                    <span class="menu-title">Compra De Productos</span>
+                <a class="nav-link" href="facturas">
+                    <i class="ti-receipt menu-icon"></i>
+                    <span class="menu-title">Facturas Registradas</span>
                 </a>
             </li>
-            <!--
-            <li class="nav-item">
-                <a class="nav-link" href="promociones">
-                    <i class="ti-announcement menu-icon"></i>
-                    <span class="menu-title">Promociones</span>
-                </a>
-            </li>
-        -->
+
             <li class="nav-item">
                 <a class="nav-link" href="ganadores">
                     <i class="ti-cup menu-icon"></i>
                     <span class="menu-title">Ganadores</span>
                 </a>
             </li>
+
 
         </ul>
     </nav>

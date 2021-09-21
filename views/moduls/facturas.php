@@ -4,12 +4,14 @@
             <div class="col-lg-12 grid-margin">
                 <div class="card">
                     <div class="card-body">
+                        <h4 class="card-title">Lista de Facturas Registradas</h4>
+
 
                         <div class="col-lg-12 col-md-12 col-sm-12">
                             <div class="row">
                                 <div class="col-lg-2 col-md-2  col-sm-2">
                                     <label class="">Serie Tienda</label>
-                                    <select class="form-control" id="serie" onchange="cargarGanadores(1);">
+                                    <select class="form-control" id="serie" onchange="cargarFacturasRegistradas(1);">
                                         <option value="">Todas</option>
                                         <option value="FASM">FASM</option>
                                         <option value="FACP">FACP</option>
@@ -20,17 +22,17 @@
                                     </select>
                                 </div>
                                 <div class="col-lg-2 col-md-2  col-sm-2">
-                                    <label class="">Ganadores</label>
-                                    <select class="form-control" id="ganadores" onchange="cargarGanadores(1);">
-                                        <option value="">Todas</option>
-                                        <option value="1">GANADORES CON STOCK</option>
-                                        <option value="0">GANADORES SIN STOCK</option>
+                                    <label class="">Estatus</label>
+                                    <select class="form-control" id="estatus" onchange="cargarFacturasRegistradas(1);">
+                                        <option value="">Todos</option>
+                                        <option value="0">Vigente</option>
+                                        <option value="1">Cancelada</option>
 
                                     </select>
                                 </div>
                                 <div class="col-lg-2 col-md-2  col-sm-2">
                                     <label class="">Mostrar</label>
-                                    <select class="form-control" id="per_page" onchange="cargarGanadores(1);">
+                                    <select class="form-control" id="per_page" onchange="cargarFacturasRegistradas(1);">
                                         <option>5</option>
                                         <option>10</option>
                                         <option selected="">15</option>
@@ -40,11 +42,11 @@
                                 <div class="col-lg-4 col-md-4  col-sm-4">
                                     <div class="row">
                                         <div class="col-lg-9 col-md-9 col-sm-9">
-                                            <label class="">Buscar por cliente</label>
+                                            <label class="">Buscar por Nombre</label>
                                             <input type="text" class="form-control" id="nombre">
                                         </div>
                                         <div class="col-lg-3 col-md-3 col-sm-3">
-                                            <button type="button" class="btn btn-danger btn-rounded btn-icon" onclick="cargarGanadores(1);">
+                                            <button type="button" class="btn btn-danger btn-rounded btn-icon" onclick="cargarFacturasRegistradas(1);">
                                                 <i class="ti-search"></i>
                                             </button>
                                         </div>
@@ -54,7 +56,7 @@
                                     <div class="card">
                                         <div class="card-body">
                                             <p class="card-title mb-0"></p>
-                                            <div class="datosGanadores">
+                                            <div class="datosFacturas">
 
                                             </div>
 

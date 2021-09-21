@@ -29,7 +29,6 @@ session_start();
     <script src="views/js/off-canvas.js"></script>
     <script src="views/js/hoverable-collapse.js"></script>
     <script src="views/js/template.js"></script>
-    <script src="views/js/todolist.js"></script>
     <!-- endinject -->
     <!-- Custom js for this page-->
     <script src="views/js/dashboard.js"></script>
@@ -40,6 +39,7 @@ session_start();
     <!-- End custom js for this page-->
     <!-- datatables -->
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    
 
 
 
@@ -73,7 +73,7 @@ session_start();
     echo '</div>';
     ?>
     <!-- JS PERSONALIZADO -->
-    <script src="views/js/solicitudes.js"></script>
+    <script src="views/js/acciones.js"></script>
 </body>
 
 </html>
