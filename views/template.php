@@ -39,7 +39,6 @@ session_start();
     <!-- End custom js for this page-->
     <!-- datatables -->
     <script src="//cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-    
 
 
 
